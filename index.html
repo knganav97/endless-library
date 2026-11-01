@@ -407,15 +407,23 @@
 
   .statement-table-wrap{
     overflow:auto;max-height:min(620px,70vh);-webkit-overflow-scrolling:touch;
-    scrollbar-width:thin;scrollbar-color:var(--gold) rgba(255,255,255,0.08);
-    border-radius:10px;
+    scrollbar-width:none;border-radius:10px;flex:1;min-width:0;
   }
-  .statement-table-wrap::-webkit-scrollbar{width:9px;height:9px;}
-  .statement-table-wrap::-webkit-scrollbar-track{background:rgba(255,255,255,0.06);border-radius:6px;}
-  .statement-table-wrap::-webkit-scrollbar-thumb{background:var(--gold);border-radius:6px;}
+  .statement-table-wrap::-webkit-scrollbar{display:none;}
   .scroll-hint{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--paper-dim);font-size:11.5px;letter-spacing:.04em;margin:0 0 14px;}
   .scroll-hint svg{width:13px;height:13px;flex:0 0 auto;animation:scrollHintMove 1.6s ease-in-out infinite;}
   @keyframes scrollHintMove{0%,100%{transform:translateX(0);opacity:.5;}50%{transform:translateX(5px);opacity:1;}}
+
+  /* Thanh scroll tự vẽ, luôn hiển thị (scrollbar gốc trên iOS/Android tự ẩn khi không
+     chạm vào, nên cần 1 chỉ báo luôn thấy được để biết bảng còn cuộn được) - thay hẳn
+     scrollbar gốc (đã ẩn ở trên) để không bị hiện trùng 2 thanh. */
+  .statement-scroll-area{display:flex;align-items:stretch;gap:6px;}
+  .scrollbar-track{display:none;height:6px;margin-top:8px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;}
+  .scrollbar-track.visible{display:block;}
+  .scrollbar-thumb{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--violet-glow),var(--gold));width:0%;}
+  .scrollbar-track-v{display:none;width:6px;flex:0 0 auto;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;}
+  .scrollbar-track-v.visible{display:block;}
+  .scrollbar-thumb-v{width:100%;border-radius:999px;background:linear-gradient(180deg,var(--violet-glow),var(--gold));height:0%;}
   .statement-table{border-collapse:collapse;table-layout:fixed;}
   .statement-table th{text-align:left;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-dim);padding:10px 12px 12px;border-bottom:1px solid var(--card-border);white-space:nowrap;position:sticky;top:0;z-index:3;background:var(--card-solid);}
   .statement-table th.sortable{cursor:pointer;user-select:none;transition:color .2s ease;}
@@ -840,25 +848,29 @@
           Vuốt/cuộn ngang để xem đầy đủ bảng
         </div>
 
-        <div class="statement-table-wrap">
-          <table class="statement-table" style="width:958px;">
-            <colgroup>
-              <col style="width:78px;"><col style="width:136px;"><col style="width:190px;">
-              <col style="width:120px;"><col style="width:190px;">
-              <col style="width:118px;"><col style="width:126px;">
-            </colgroup>
-            <thead>
-              <tr>
-                <th class="sortable" data-sort-key="date" onclick="ppSetSort('date')">Ngày<span class="sort-arrow"></span></th>
-                <th class="sortable" data-sort-key="category" onclick="ppSetSort('category')">Hạng mục<span class="sort-arrow"></span></th>
-                <th class="sortable pin-content" data-sort-key="description" onclick="ppSetSort('description')">Nội dung<span class="sort-arrow"></span></th>
-                <th>Vendor</th>
-                <th>Note</th><th>Số tiền</th><th>Chứng từ</th>
-              </tr>
-            </thead>
-            <tbody id="statementBody"></tbody>
-          </table>
+        <div class="statement-scroll-area">
+          <div class="statement-table-wrap" id="statementWrapTimeline">
+            <table class="statement-table" style="width:958px;">
+              <colgroup>
+                <col style="width:78px;"><col style="width:136px;"><col style="width:190px;">
+                <col style="width:120px;"><col style="width:190px;">
+                <col style="width:118px;"><col style="width:126px;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort-key="date" onclick="ppSetSort('date')">Ngày<span class="sort-arrow"></span></th>
+                  <th class="sortable" data-sort-key="category" onclick="ppSetSort('category')">Hạng mục<span class="sort-arrow"></span></th>
+                  <th class="sortable pin-content" data-sort-key="description" onclick="ppSetSort('description')">Nội dung<span class="sort-arrow"></span></th>
+                  <th>Vendor</th>
+                  <th>Note</th><th>Số tiền</th><th>Chứng từ</th>
+                </tr>
+              </thead>
+              <tbody id="statementBody"></tbody>
+            </table>
+          </div>
+          <div class="scrollbar-track-v" id="scrollbarTrackTimelineV"><div class="scrollbar-thumb-v"></div></div>
         </div>
+        <div class="scrollbar-track" id="scrollbarTrackTimeline"><div class="scrollbar-thumb"></div></div>
       </div>
 
       <div id="statementView-grouped" style="display:none;">
@@ -867,22 +879,26 @@
           Vuốt/cuộn ngang để xem đầy đủ bảng
         </div>
 
-        <div class="statement-table-wrap">
-          <table class="statement-table statement-table-grouped" style="width:964px;">
-            <colgroup>
-              <col style="width:50px;"><col style="width:190px;"><col style="width:120px;">
-              <col style="width:190px;"><col style="width:70px;">
-              <col style="width:100px;"><col style="width:118px;"><col style="width:126px;">
-            </colgroup>
-            <thead>
-              <tr>
-                <th>STT</th><th class="pin-content">Nội dung</th><th>Vendor</th>
-                <th>Note</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th>Chứng từ</th>
-              </tr>
-            </thead>
-            <tbody id="statementGroupedBody"></tbody>
-          </table>
+        <div class="statement-scroll-area">
+          <div class="statement-table-wrap" id="statementWrapGrouped">
+            <table class="statement-table statement-table-grouped" style="width:964px;">
+              <colgroup>
+                <col style="width:50px;"><col style="width:190px;"><col style="width:120px;">
+                <col style="width:190px;"><col style="width:70px;">
+                <col style="width:100px;"><col style="width:118px;"><col style="width:126px;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>STT</th><th class="pin-content">Nội dung</th><th>Vendor</th>
+                  <th>Note</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th>Chứng từ</th>
+                </tr>
+              </thead>
+              <tbody id="statementGroupedBody"></tbody>
+            </table>
+          </div>
+          <div class="scrollbar-track-v" id="scrollbarTrackGroupedV"><div class="scrollbar-thumb-v"></div></div>
         </div>
+        <div class="scrollbar-track" id="scrollbarTrackGrouped"><div class="scrollbar-thumb"></div></div>
       </div>
 
       <div class="category-bars" id="categoryBars"></div>
@@ -1812,6 +1828,7 @@ function renderStatementTable(expenseRows){
   const rows = ppSortRows(expenseRows);
   if(rows.length === 0){
     body.innerHTML = `<tr><td colspan="7" class="statement-empty">Chưa có khoản chi nào được ghi nhận.</td></tr>`;
+    if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
     return;
   }
   body.innerHTML = rows.map(r => {
@@ -1835,6 +1852,7 @@ function renderStatementTable(expenseRows){
         <td>${receipts}</td>
       </tr>`;
   }).join('');
+  if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
 }
 
 function ppCellValue(v){
@@ -1900,6 +1918,7 @@ function renderStatementGrouped(expenseRows, progressRows){
   const body = document.getElementById('statementGroupedBody');
   if(expenseRows.length === 0){
     body.innerHTML = `<tr><td colspan="8" class="statement-empty">Chưa có khoản chi nào được ghi nhận.</td></tr>`;
+    if(ppSyncGroupedScrollbar) ppSyncGroupedScrollbar();
     return;
   }
 
@@ -1985,6 +2004,7 @@ function renderStatementGrouped(expenseRows, progressRows){
       <td></td><td class="pin-content">TỔNG CHI</td><td></td><td></td><td></td><td></td><td>${fmtVND(grandTotal)}</td><td></td>
     </tr>`);
   body.innerHTML = html.join('');
+  if(ppSyncGroupedScrollbar) ppSyncGroupedScrollbar();
 }
 
 document.querySelectorAll('.view-toggle-btn').forEach(btn => {
@@ -1994,8 +2014,62 @@ document.querySelectorAll('.view-toggle-btn').forEach(btn => {
     const view = btn.dataset.view;
     document.getElementById('statementView-timeline').style.display = view === 'timeline' ? '' : 'none';
     document.getElementById('statementView-grouped').style.display = view === 'grouped' ? '' : 'none';
+    // Vừa hiện lại mới có clientWidth đúng để tính thanh scroll tự vẽ.
+    if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
+    if(ppSyncGroupedScrollbar) ppSyncGroupedScrollbar();
   });
 });
+
+// Thanh scroll tự vẽ cho bảng sao kê (cả ngang lẫn dọc) - thay cho scrollbar gốc (đã ẩn
+// qua CSS) vì trên iOS/Android scrollbar gốc tự ẩn khi không chạm vào, không ép hiện
+// cố định được. Đồng bộ theo scrollLeft/scrollTop thực của khung bảng.
+function ppSetupScrollIndicator(wrapId, trackHId, trackVId){
+  const wrap = document.getElementById(wrapId);
+  const trackH = document.getElementById(trackHId);
+  const trackV = document.getElementById(trackVId);
+  if(!wrap) return null;
+  const thumbH = trackH ? trackH.querySelector('.scrollbar-thumb') : null;
+  const thumbV = trackV ? trackV.querySelector('.scrollbar-thumb-v') : null;
+  function sync(){
+    if(trackH && thumbH){
+      const scrollableH = wrap.scrollWidth > wrap.clientWidth + 1;
+      trackH.classList.toggle('visible', scrollableH);
+      if(scrollableH){
+        const thumbPct = Math.max(8, (wrap.clientWidth / wrap.scrollWidth) * 100);
+        const maxScroll = wrap.scrollWidth - wrap.clientWidth;
+        const scrolledPct = maxScroll > 0 ? (wrap.scrollLeft / maxScroll) * (100 - thumbPct) : 0;
+        thumbH.style.width = thumbPct + '%';
+        thumbH.style.marginLeft = scrolledPct + '%';
+      }
+    }
+    if(trackV && thumbV){
+      const scrollableV = wrap.scrollHeight > wrap.clientHeight + 1;
+      trackV.classList.toggle('visible', scrollableV);
+      if(scrollableV){
+        const thumbPct = Math.max(8, (wrap.clientHeight / wrap.scrollHeight) * 100);
+        const maxScroll = wrap.scrollHeight - wrap.clientHeight;
+        const scrolledPct = maxScroll > 0 ? (wrap.scrollTop / maxScroll) * (100 - thumbPct) : 0;
+        thumbV.style.height = thumbPct + '%';
+        thumbV.style.marginTop = scrolledPct + '%';
+      }
+    }
+  }
+  wrap.addEventListener('scroll', sync, {passive:true});
+  window.addEventListener('resize', sync);
+  sync();
+  return sync;
+}
+const ppSyncTimelineScrollbar = ppSetupScrollIndicator('statementWrapTimeline', 'scrollbarTrackTimeline', 'scrollbarTrackTimelineV');
+const ppSyncGroupedScrollbar = ppSetupScrollIndicator('statementWrapGrouped', 'scrollbarTrackGrouped', 'scrollbarTrackGroupedV');
+
+// Một số trình duyệt (đặc biệt Safari iOS khi cuộn quán tính/momentum) bắn sự kiện
+// 'scroll' rất thưa, khiến chỉ lắng nghe 'scroll' không đủ để thanh bám sát - dùng thêm
+// vòng lặp rAF đồng bộ liên tục theo vị trí cuộn thực, không phụ thuộc tần suất sự kiện.
+(function pollScrollIndicators(){
+  if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
+  if(ppSyncGroupedScrollbar) ppSyncGroupedScrollbar();
+  requestAnimationFrame(pollScrollIndicators);
+})();
 
 /* ================= tab "Lịch sự kiện" (đọc trực tiếp từ Google Sheet) ================= */
 const EV_GID = '2051390357';
