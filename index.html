@@ -3,7 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⎡ Endless LIBRAry ⎦ — October Project for Thỏ (Da LAB)</title>
+<title>⎡ Endless LIBRAry ⎦ - October Project for Thỏ (Da LAB)</title>
+<meta name="description" content="Endless LIBRAry - dự án gây quỹ tháng 10 dành cho Thỏ (Da LAB), thực hiện bởi Vòng Tròn Nhỏ.">
+
+<!-- Ảnh preview khi chia sẻ link (Open Graph / Twitter). Dùng URL tuyệt đối. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://endlesslibrary.netlify.app/">
+<meta property="og:title" content="⎡ Endless LIBRAry ⎦ - October Project for Thỏ (Da LAB)">
+<meta property="og:description" content="Dự án gây quỹ tháng 10 dành cho Thỏ (Da LAB), thực hiện bởi Vòng Tròn Nhỏ.">
+<meta property="og:image" content="https://endlesslibrary.netlify.app/TYPO.png">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1080">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="⎡ Endless LIBRAry ⎦ - October Project for Thỏ (Da LAB)">
+<meta name="twitter:description" content="Dự án gây quỹ tháng 10 dành cho Thỏ (Da LAB), thực hiện bởi Vòng Tròn Nhỏ.">
+<meta name="twitter:image" content="https://endlesslibrary.netlify.app/TYPO.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -22,12 +36,13 @@
     --parchment-ink:#4a3a22;
     --line:rgba(216,184,119,0.28);
     --card-bg:rgba(255,255,255,0.045);
+    --card-solid:#170f2c;
     --card-border:rgba(216,184,119,0.22);
     --serif:'Cormorant Garamond', serif;
     --sans:'Be Vietnam Pro', sans-serif;
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{overflow-anchor:none;}
   body{
     margin:0;
     background:var(--ink);
@@ -220,6 +235,35 @@
     .tab-btn{padding:7px 10px;font-size:11.5px;}
   }
 
+  /* ===== TAB MENU (dropdown - thay thanh ngang trên màn hình hẹp) ===== */
+  .tab-menu{display:none;}
+  @media (max-width:640px){
+    .tab-scroll{display:none;}
+    .tab-menu{display:flex;position:relative;flex:1;min-width:0;padding:10px 14px;}
+  }
+  .tab-menu-toggle{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:rgba(255,255,255,0.05);border:1px solid var(--card-border);border-radius:999px;
+    padding:9px 16px;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--gold-bright);
+    cursor:pointer;transition:border-color .2s ease;
+  }
+  .tab-menu-toggle:hover{border-color:var(--gold);}
+  .tab-menu-chevron{width:15px;height:15px;flex:0 0 auto;transition:transform .2s ease;}
+  .tab-menu.open .tab-menu-chevron{transform:rotate(180deg);}
+  .tab-menu-dropdown{
+    display:none;position:fixed;z-index:30;
+    background:rgba(14,9,26,0.98);border:1px solid var(--card-border);border-radius:14px;
+    padding:6px;box-shadow:0 12px 32px rgba(0,0,0,0.45);
+    max-height:min(420px,70vh);overflow-y:auto;
+  }
+  .tab-menu-dropdown.open{display:block;}
+  .tab-menu-item{
+    display:block;width:100%;text-align:left;background:none;border:none;border-radius:10px;
+    padding:11px 14px;margin:0;font-family:var(--sans);font-size:13.5px;color:var(--paper-dim);cursor:pointer;
+  }
+  .tab-menu-item:hover{background:rgba(255,255,255,0.06);color:var(--paper);}
+  .tab-menu-item.active{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#241407;font-weight:700;}
+
   /* ===== TAB PANELS ===== */
   .tab-panel{display:none;animation:fadeInPanel .35s ease;}
   .tab-panel.active{display:block;}
@@ -262,7 +306,7 @@
   .book-marker.reached{border-color:var(--gold);box-shadow:0 0 16px rgba(216,184,119,0.6);}
   .book-marker svg{width:16px;height:16px;}
 
-  /* track-side-a sits ABOVE the bar, track-side-b BELOW — milestones alternate sides so
+  /* track-side-a sits ABOVE the bar, track-side-b BELOW - milestones alternate sides so
      nearby points (like 84.6% / 92.3%) never share the same row and can't overlap. */
   .track-side{position:relative;height:104px;margin:0 10px;}
   .track-side-a{margin-bottom:10px;}
@@ -314,6 +358,148 @@
   .progress-loading{text-align:center;color:var(--paper-dim);font-size:14px;padding:30px 0;}
   .retry-btn{display:inline-block;margin-top:10px;background:none;border:1px solid var(--gold);color:var(--gold-bright);border-radius:999px;padding:7px 20px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:background .2s ease;}
   .retry-btn:hover{background:rgba(216,184,119,0.12);}
+
+  /* ===== PROJECT PROGRESS (Nhật ký kiến tạo) ===== */
+  .wp-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:22px;align-items:stretch;}
+  @media (max-width:820px){.wp-grid{grid-template-columns:1fr;}}
+  .wp-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:clamp(22px,4vw,36px);}
+  .wp-card-title{font-family:var(--serif);font-style:italic;color:var(--gold-bright);font-size:20px;margin-bottom:22px;}
+
+  .wp-row{margin-bottom:20px;}
+  .wp-row:last-child{margin-bottom:0;}
+  .wp-row-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;font-size:13.5px;color:var(--paper);margin-bottom:8px;}
+  .wp-row-head span:last-child{color:var(--gold-bright);font-weight:600;white-space:nowrap;}
+  .wp-bar-track{height:8px;border-radius:6px;background:rgba(255,255,255,0.08);overflow:hidden;}
+  .wp-bar-fill{height:100%;border-radius:6px;width:0%;background:linear-gradient(90deg,var(--violet-glow),var(--gold));box-shadow:0 0 12px rgba(216,184,119,0.4);transition:width 1.2s cubic-bezier(.2,.8,.2,1);}
+  .wp-bar-fill.cat-birthday{background:linear-gradient(90deg,rgba(216,184,119,0.55),var(--gold-bright));box-shadow:0 0 12px rgba(216,184,119,0.5);}
+  .wp-bar-fill.cat-concert{background:linear-gradient(90deg,rgba(138,92,246,0.55),#cdb9fd);box-shadow:0 0 12px rgba(138,92,246,0.5);}
+  .wp-bar-fill.cat-fancafe{background:linear-gradient(90deg,rgba(224,120,190,0.55),#f0b6de);box-shadow:0 0 12px rgba(224,120,190,0.5);}
+  .wp-bar-fill.cat-other{background:linear-gradient(90deg,rgba(255,255,255,0.25),var(--paper-dim));box-shadow:none;}
+
+  .budget-donut{position:relative;width:min(220px,58vw);margin:0 auto 26px;}
+  .budget-donut svg{display:block;width:100%;height:auto;transform:rotate(-90deg);}
+  .donut-track{fill:none;stroke:rgba(255,255,255,0.08);stroke-width:16;}
+  .donut-fill{fill:none;stroke-width:16;stroke-linecap:round;stroke-dasharray:502.65;stroke-dashoffset:502.65;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1);}
+  .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .donut-pct{font-family:var(--serif);font-style:italic;font-size:clamp(28px,6vw,40px);color:var(--gold-bright);}
+  .donut-label{font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--paper-dim);margin-top:4px;}
+
+  .budget-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media (max-width:480px){.budget-tiles{grid-template-columns:1fr;}}
+  .budget-tile{background:rgba(255,255,255,0.03);border:1px solid var(--card-border);border-radius:14px;padding:14px 16px;text-align:center;}
+  .budget-tile small{display:block;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-dim);margin-bottom:6px;}
+  .budget-tile span{font-family:var(--serif);font-size:17px;color:var(--paper);}
+  .budget-interest-note{text-align:center;color:var(--paper-dim);font-size:11.5px;font-style:italic;margin-top:12px;line-height:1.6;}
+
+  .statement-card{margin-top:22px;}
+  .statement-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px;}
+  .statement-head .wp-card-title{margin-bottom:0;}
+
+  .view-toggle{display:flex;gap:8px;flex-wrap:wrap;}
+  .view-toggle-btn{background:transparent;border:1px solid var(--card-border);color:var(--paper-dim);border-radius:999px;padding:7px 16px;font-size:12.5px;cursor:pointer;font-family:var(--sans);transition:all .2s ease;}
+  .view-toggle-btn:hover{color:var(--paper);border-color:var(--gold);}
+  .view-toggle-btn.active{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#241407;font-weight:600;border-color:transparent;}
+
+  .category-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 24px;margin-top:26px;padding-top:26px;border-top:1px dashed var(--card-border);}
+  @media (max-width:640px){.category-bars{grid-template-columns:1fr;}}
+  .category-bars .wp-row-head{flex-direction:column;align-items:flex-start;gap:2px;}
+  .category-bars .wp-row-head span:last-child{font-size:12px;}
+
+  .statement-table-wrap{
+    overflow:auto;max-height:min(620px,70vh);-webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;scrollbar-color:var(--gold) rgba(255,255,255,0.08);
+    border-radius:10px;
+  }
+  .statement-table-wrap::-webkit-scrollbar{width:9px;height:9px;}
+  .statement-table-wrap::-webkit-scrollbar-track{background:rgba(255,255,255,0.06);border-radius:6px;}
+  .statement-table-wrap::-webkit-scrollbar-thumb{background:var(--gold);border-radius:6px;}
+  .scroll-hint{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--paper-dim);font-size:11.5px;letter-spacing:.04em;margin:0 0 14px;}
+  .scroll-hint svg{width:13px;height:13px;flex:0 0 auto;animation:scrollHintMove 1.6s ease-in-out infinite;}
+  @keyframes scrollHintMove{0%,100%{transform:translateX(0);opacity:.5;}50%{transform:translateX(5px);opacity:1;}}
+  .statement-table{border-collapse:collapse;table-layout:fixed;}
+  .statement-table th{text-align:left;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-dim);padding:10px 12px 12px;border-bottom:1px solid var(--card-border);white-space:nowrap;position:sticky;top:0;z-index:3;background:var(--card-solid);}
+  .statement-table th.sortable{cursor:pointer;user-select:none;transition:color .2s ease;}
+  .statement-table th.sortable:hover{color:var(--paper);}
+  .statement-table th.sortable.sort-active{color:var(--gold-bright);}
+  .statement-table th .sort-arrow{display:inline-block;margin-left:4px;font-size:9px;color:var(--paper-dim);opacity:.5;}
+  .statement-table th.sortable.sort-active .sort-arrow{color:var(--gold-bright);opacity:1;}
+  .statement-table td{padding:14px 12px;font-size:13.5px;color:var(--paper);border-bottom:1px dashed var(--card-border);vertical-align:top;overflow-wrap:break-word;}
+  .statement-table tr:last-child td{border-bottom:none;}
+  .statement-table .locked{color:var(--paper-dim);font-style:italic;font-size:12.5px;white-space:nowrap;}
+  .statement-table th.pin-content,
+  .statement-table td.pin-content{position:sticky;left:0;z-index:2;background:var(--card-solid);box-shadow:4px 0 10px -6px rgba(0,0,0,0.55);}
+  .statement-table thead th.pin-content{z-index:4;}
+  .statement-footnote{text-align:center;color:var(--paper-dim);font-size:12px;font-style:italic;line-height:1.7;margin-top:18px;}
+
+  .statement-table tr.group-header-row td{background:rgba(216,184,119,0.08);color:var(--gold-bright);font-family:var(--serif);font-style:italic;font-size:15px;padding:10px 12px;border-bottom:1px solid var(--card-border);}
+  .statement-table tr.group-subtotal-row td{background:rgba(255,255,255,0.03);color:var(--paper);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px dashed var(--card-border);white-space:nowrap;}
+  .statement-table tr.grand-total-row td{background:rgba(216,184,119,0.14);color:var(--gold-bright);font-weight:700;font-size:14px;border-top:2px solid var(--gold);border-bottom:none;white-space:nowrap;}
+  .statement-table tr.group-header-row td.pin-content{background:#261f3a;}
+  .statement-table tr.group-subtotal-row td.pin-content{background:#1e1632;}
+  .statement-table tr.grand-total-row td.pin-content{background:#332637;}
+
+  .category-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap;border:1px solid transparent;}
+  .category-badge.cat-birthday{background:rgba(216,184,119,0.16);color:var(--gold-bright);border-color:rgba(216,184,119,0.42);}
+  .category-badge.cat-concert{background:rgba(138,92,246,0.18);color:#cdb9fd;border-color:rgba(138,92,246,0.45);}
+  .category-badge.cat-fancafe{background:rgba(224,120,190,0.18);color:#f0b6de;border-color:rgba(224,120,190,0.42);}
+  .category-badge.cat-other{background:rgba(255,255,255,0.06);color:var(--paper-dim);border-color:var(--card-border);}
+  .statement-empty{text-align:center;color:var(--paper-dim);padding:30px 0;}
+
+  .receipt-thumbs{display:flex;gap:6px;flex-wrap:wrap;}
+  .receipt-thumb{display:block;width:44px;height:44px;border-radius:8px;overflow:hidden;border:1px solid var(--card-border);position:relative;flex:0 0 auto;}
+  .receipt-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .receipt-thumb.fallback{display:flex;align-items:center;justify-content:center;font-size:9.5px;color:var(--gold);text-align:center;padding:2px;text-decoration:none;}
+
+  /* ===== EVENT SCHEDULE (Lịch sự kiện) ===== */
+  .event-date-block{display:grid;grid-template-columns:92px 1fr;gap:24px;margin-bottom:34px;position:relative;}
+  .event-date-block:last-child{margin-bottom:0;}
+  .event-date{text-align:center;position:sticky;top:86px;align-self:start;background:linear-gradient(160deg,rgba(216,184,119,.16),rgba(98,47,145,.18));border:1px solid var(--card-border);border-radius:18px;padding:16px 8px;}
+  .event-date strong{display:block;font-family:var(--serif);font-style:italic;font-size:34px;color:var(--gold-bright);line-height:1;}
+  .event-date span{display:block;color:var(--paper-dim);font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;margin-top:6px;}
+
+  .event-stack{display:grid;gap:14px;}
+
+  .event-card{display:grid;grid-template-columns:78px 42px 1fr auto;align-items:center;gap:14px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:18px 20px;transition:.25s ease;}
+  .event-card:hover{transform:translateY(-2px);border-color:rgba(216,184,119,.55);}
+  .event-range-banner{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:14px;background:var(--card-bg);border:1px dashed var(--gold);border-radius:18px;padding:18px 20px;margin-bottom:24px;transition:.25s ease;}
+  .event-range-banner:hover{transform:translateY(-2px);}
+  .event-time{font-family:var(--serif);color:var(--gold-bright);font-size:18px;font-style:italic;}
+  .event-time span{display:block;}
+  .event-time .event-time-end{margin-top:2px;}
+  .event-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(216,184,119,.09);border:1px solid rgba(216,184,119,.2);font-size:18px;}
+  .event-info h3{margin:0 0 4px;color:var(--paper);font-size:16px;}
+  .event-info p{margin:0;color:var(--paper-dim);font-size:12.5px;line-height:1.5;}
+  .event-info p + p{margin-top:3px;}
+  .event-info .event-range-label{color:var(--gold-bright);font-weight:600;}
+  .event-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:8px;}
+  .event-actions .detail-link{display:inline-block;font-size:12px;color:var(--gold);text-decoration:none;border-bottom:1px dashed var(--gold);}
+  .gcal-btn{grid-column:1/-1;justify-self:end;display:inline-flex;align-items:center;gap:5px;margin-top:2px;padding:3px 10px;border-radius:999px;border:1px solid var(--card-border);background:rgba(216,184,119,0.08);color:var(--gold-bright);font-family:var(--sans);font-size:10.5px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s ease, border-color .2s ease;}
+  .gcal-btn svg{width:11px;height:11px;flex:0 0 auto;}
+  .gcal-btn:hover{background:rgba(216,184,119,0.16);border-color:var(--gold);}
+  .event-meta{text-align:right;min-width:92px;}
+  .event-meta small{display:block;color:var(--paper-dim);font-size:10.5px;margin-top:7px;}
+
+  .status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:600;white-space:nowrap;border:1px solid;}
+  .status-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .status-pill.st-upcoming{color:#f2d58f;background:rgba(216,184,119,.08);border-color:rgba(216,184,119,.28);}
+  .status-pill.st-ongoing{color:#a8e0b8;background:rgba(93,177,116,.08);border-color:rgba(168,224,184,.25);}
+  .status-pill.st-past{color:var(--paper-dim);background:rgba(255,255,255,.05);border-color:var(--card-border);}
+  .status-pill.st-changed{color:#f0c98a;background:rgba(224,170,90,.08);border-color:rgba(224,170,90,.28);}
+  .status-pill.st-cancelled{color:#f0b3b3;background:rgba(230,154,154,.08);border-color:rgba(230,154,154,.28);}
+  .status-pill.st-full{color:#c8a8f0;background:rgba(163,104,218,.08);border-color:rgba(200,168,240,.25);}
+
+  @media (max-width:560px){
+    .event-date-block{grid-template-columns:1fr;gap:12px;margin-bottom:28px;}
+    .event-date{position:static;display:flex;align-items:baseline;justify-content:center;gap:8px;padding:10px 14px;}
+    .event-date strong{font-size:24px;}
+    .event-date span{margin:0;}
+    .event-card{grid-template-columns:auto 34px 1fr;padding:15px 14px;gap:8px;}
+    .event-range-banner{grid-template-columns:34px 1fr;padding:15px 14px;gap:10px;}
+    .event-icon{width:32px;height:32px;font-size:15px;}
+    .event-meta{grid-column:3;text-align:left;display:flex;align-items:center;gap:8px;}
+    .event-range-banner .event-meta{grid-column:2;}
+    .event-meta small{margin:0;}
+  }
 
   /* ===== FUND CARDS ===== */
   .fund-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
@@ -397,6 +583,10 @@
 
   /* ===== THANK YOU WALL ===== */
   .wall-stats{display:flex;justify-content:center;gap:48px;margin-bottom:40px;flex-wrap:wrap;text-align:center;}
+  .wall-sort{display:flex;justify-content:center;gap:8px;margin-bottom:28px;}
+  .sort-btn{background:transparent;border:1px solid var(--card-border);color:var(--paper-dim);border-radius:999px;padding:7px 18px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:all .2s ease;}
+  .sort-btn:hover{color:var(--paper);border-color:var(--gold);}
+  .sort-btn.active{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#241407;font-weight:600;border-color:transparent;}
   .wall-stats div span{display:block;font-family:var(--serif);font-size:34px;color:var(--gold-bright);font-style:italic;}
   .wall-stats div small{font-size:11.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--paper-dim);}
   .wall-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
@@ -476,8 +666,8 @@
   <span class="music-eq" id="musicEq" aria-hidden="true"><i></i><i></i><i></i></span>
 </button>
 
-<div class="site-logo" aria-label="Vòng Tròn Nhỏ — Chú Thỏ Cao Cấp">
-  <img src="logo-vtn.png" alt="Vòng Tròn Nhỏ — Chú Thỏ Cao Cấp">
+<div class="site-logo" aria-label="Vòng Tròn Nhỏ - Chú Thỏ Cao Cấp">
+  <img src="logo-vtn.png" alt="Vòng Tròn Nhỏ - Chú Thỏ Cao Cấp">
 </div>
 <div class="scene-bg" aria-hidden="true"></div>
 <div class="visual-atmosphere" aria-hidden="true">
@@ -510,13 +700,22 @@
     <div class="tab-row">
       <button class="tab-btn active" data-tab="story">Giới thiệu</button>
       <button class="tab-btn" data-tab="progress">Tiến trình</button>
+      <button class="tab-btn" data-tab="projectProgress">Tiến độ dự án</button>
+      <button class="tab-btn" data-tab="eventSchedule">Lịch sự kiện</button>
       <button class="tab-btn" data-tab="allocation">Phân bổ quỹ</button>
       <button class="tab-btn" data-tab="donate">Donate</button>
       <button class="tab-btn" data-tab="thankyou">Danh sách Donors</button>
       <button class="tab-btn" data-tab="lookup">Tra cứu</button>
     </div>
   </div>
+  <div class="tab-menu" id="tabMenu">
+    <button type="button" class="tab-menu-toggle" id="tabMenuToggle" aria-haspopup="true" aria-expanded="false">
+      <span id="tabMenuLabel">Giới thiệu</span>
+      <svg class="tab-menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+  </div>
 </nav>
+<div class="tab-menu-dropdown" id="tabMenuDropdown"></div>
 
 <main class="tab-content">
 
@@ -525,9 +724,9 @@
   <div class="divider"><span class="rule"></span><span class="glyph">✦</span><span class="rule"></span></div>
   <h2 class="section-title">Cánh cửa của Endless LIBRAry</h2>
   <div class="about-card">
-    <p class="lead">Lấy cảm hứng từ "lore" của chú Thỏ và cung Thiên Bình (Libra), Tròn đã liên tưởng và phát triển thành một LIBRAry — một thư viện.</p>
+    <p class="lead">Lấy cảm hứng từ "lore" của chú Thỏ và cung Thiên Bình (Libra), Tròn đã liên tưởng và phát triển thành một LIBRAry - một thư viện.</p>
     <p>⎡ Endless LIBRAry ⎦ là một không gian lưu giữ những thế giới mà chú Thỏ Da LAB đã đi qua, từ âm nhạc, sân khấu đến những phiên bản khác nhau để trở thành một smALL-ROUNDER.</p>
-    <p>"Endless" dành cho khả năng không có giới hạn, những câu chuyện chưa có hồi kết, hay một Vòng Tròn có thể bắt đầu ở một điểm bất kỳ nhưng không có điểm cuối. Và ⎡ Endless LIBRAry ⎦ cũng như một vòng tròn có thể được vẽ trong một không gian hữu hạn — chúng mình tin rằng một không gian nhỏ vẫn có thể chứa đựng vô vàn câu chuyện với thế giới thật rộng lớn không có giới hạn.</p>
+    <p>"Endless" dành cho khả năng không có giới hạn, những câu chuyện chưa có hồi kết, hay một Vòng Tròn có thể bắt đầu ở một điểm bất kỳ nhưng không có điểm cuối. Và ⎡ Endless LIBRAry ⎦ cũng như một vòng tròn có thể được vẽ trong một không gian hữu hạn - chúng mình tin rằng một không gian nhỏ vẫn có thể chứa đựng vô vàn câu chuyện với thế giới thật rộng lớn không có giới hạn.</p>
     <p>Lần này, chúng mình mong muốn cùng mọi người mở cánh cửa của ⎡ Endless LIBRAry ⎦, nơi những câu chuyện cũ được lưu giữ, những câu chuyện mới được viết tiếp, và những điều chưa từng xảy ra vẫn có chỗ để bắt đầu.</p>
   </div>
 </section>
@@ -590,6 +789,122 @@
   </div>
 </section>
 
+<!-- ============ PROJECT PROGRESS ============ -->
+<section id="projectProgress" class="tab-panel container-wide">
+  <div class="divider"><span class="rule"></span><span class="glyph">✦</span><span class="rule"></span></div>
+  <h2 class="section-title">Nhật ký kiến tạo</h2>
+  <p class="section-sub">Theo dõi tiến độ thi công và từng khoản chi của ⎡ Endless LIBRAry ⎦.</p>
+
+  <div id="ppLoading" class="progress-loading">Đang mở nhật ký kiến tạo…</div>
+
+  <div id="ppContent" style="display:none;">
+    <div class="wp-grid">
+      <div class="wp-card">
+        <h3 class="wp-card-title">Tiến độ theo hạng mục</h3>
+        <div id="ppBars"></div>
+      </div>
+
+      <div class="wp-card">
+        <h3 class="wp-card-title">Tình hình ngân sách</h3>
+        <div class="budget-donut">
+          <svg viewBox="0 0 200 200">
+            <circle class="donut-track" cx="100" cy="100" r="80"></circle>
+            <circle class="donut-fill" id="budgetDonutFill" cx="100" cy="100" r="80" style="stroke:var(--gold);"></circle>
+          </svg>
+          <div class="donut-center">
+            <span class="donut-pct" id="budgetPct">0%</span>
+            <span class="donut-label">Đã sử dụng</span>
+          </div>
+        </div>
+        <div class="budget-tiles">
+          <div class="budget-tile"><small>Tổng quỹ (sau refunded)</small><span id="budgetTotal">0₫</span></div>
+          <div class="budget-tile"><small>Thực chi</small><span id="budgetSpent">0₫</span></div>
+          <div class="budget-tile"><small>Còn lại</small><span id="budgetRemain">0₫</span></div>
+        </div>
+        <p class="budget-interest-note" id="budgetInterestNote"></p>
+      </div>
+    </div>
+
+    <div class="wp-card statement-card">
+      <div class="statement-head">
+        <h3 class="wp-card-title">Sao kê chi tiêu</h3>
+        <div class="view-toggle" id="statementViewToggle">
+          <button type="button" class="view-toggle-btn active" data-view="timeline">Theo thời gian</button>
+          <button type="button" class="view-toggle-btn" data-view="grouped">Theo hạng mục</button>
+        </div>
+      </div>
+
+      <div id="statementView-timeline">
+        <div class="scroll-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M15 7l5 5-5 5"/></svg>
+          Vuốt/cuộn ngang để xem đầy đủ bảng
+        </div>
+
+        <div class="statement-table-wrap">
+          <table class="statement-table" style="width:958px;">
+            <colgroup>
+              <col style="width:78px;"><col style="width:136px;"><col style="width:190px;">
+              <col style="width:120px;"><col style="width:190px;">
+              <col style="width:118px;"><col style="width:126px;">
+            </colgroup>
+            <thead>
+              <tr>
+                <th class="sortable" data-sort-key="date" onclick="ppSetSort('date')">Ngày<span class="sort-arrow"></span></th>
+                <th class="sortable" data-sort-key="category" onclick="ppSetSort('category')">Hạng mục<span class="sort-arrow"></span></th>
+                <th class="sortable pin-content" data-sort-key="description" onclick="ppSetSort('description')">Nội dung<span class="sort-arrow"></span></th>
+                <th>Vendor</th>
+                <th>Note</th><th>Số tiền</th><th>Chứng từ</th>
+              </tr>
+            </thead>
+            <tbody id="statementBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="statementView-grouped" style="display:none;">
+        <div class="scroll-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M15 7l5 5-5 5"/></svg>
+          Vuốt/cuộn ngang để xem đầy đủ bảng
+        </div>
+
+        <div class="statement-table-wrap">
+          <table class="statement-table statement-table-grouped" style="width:964px;">
+            <colgroup>
+              <col style="width:50px;"><col style="width:190px;"><col style="width:120px;">
+              <col style="width:190px;"><col style="width:70px;">
+              <col style="width:100px;"><col style="width:118px;"><col style="width:126px;">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>STT</th><th class="pin-content">Nội dung</th><th>Vendor</th>
+                <th>Note</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th>Chứng từ</th>
+              </tr>
+            </thead>
+            <tbody id="statementGroupedBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="category-bars" id="categoryBars"></div>
+
+      <p class="statement-footnote">Để đảm bảo sự bất ngờ, chi tiết nội dung các khoản chi sẽ được công bố sau khi kết thúc sự kiện.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EVENT SCHEDULE ============ -->
+<section id="eventSchedule" class="tab-panel container-wide">
+  <div class="divider"><span class="rule"></span><span class="glyph">✦</span><span class="rule"></span></div>
+  <h2 class="section-title">Lịch mở cửa thư viện</h2>
+  <p class="section-sub">Các điểm hẹn trong hành trình ⎡ Endless LIBRAry ⎦ - lưu lịch để không bỏ lỡ nhé.</p>
+
+  <div id="evLoading" class="progress-loading">Đang mở lịch sự kiện…</div>
+
+  <div id="evContent" style="display:none;">
+    <div id="eventTimeline"></div>
+  </div>
+</section>
+
 <!-- ============ FUND ALLOCATION ============ -->
 <section id="allocation" class="tab-panel">
   <div class="divider"><span class="rule"></span><span class="glyph">✦</span><span class="rule"></span></div>
@@ -598,7 +913,7 @@
   <div class="fund-grid">
     <div class="fund-card">
       <span class="num">01</span>
-      <h3>Vol. ∞ — Birthday</h3>
+      <h3>Vol. ∞ - Birthday</h3>
       <span class="date">11.10.2026</span>
       <div class="amt">30.000.000đ</div>
       <ul>
@@ -608,22 +923,25 @@
     </div>
     <div class="fund-card">
       <span class="num">02</span>
-      <h3>Stage Records — Concert</h3>
+      <h3>Stage Records - Concert</h3>
       <span class="date">17–18.10.2026</span>
       <div class="amt">80.000.000đ</div>
       <ul>
         <li>Endless LIBRAry Booth Concert</li>
+        <li>Phướn treo tòa nhà</li>
+        <li>Máy chụp hình photobooth</li>
         <li>Freebies / Fan support</li>
       </ul>
     </div>
     <div class="fund-card">
       <span class="num">03</span>
-      <h3>Beyond — Fan Cafe</h3>
+      <h3>Beyond - Fan Cafe</h3>
       <span class="date">11.10.2026</span>
       <div class="amt">10.000.000đ</div>
       <ul>
-        <li>Birthday Fan Cafe freebies / custom cup</li>
+        <li>Birthday Fan Cafe freebies</li>
         <li>Birthday decoration &amp; activities</li>
+        <li>Birthday cake</li>
       </ul>
     </div>
   </div>
@@ -634,13 +952,13 @@
 <section id="donate" class="tab-panel">
   <div class="divider"><span class="rule"></span><span class="glyph">✦</span><span class="rule"></span></div>
   <h2 class="section-title">Góp một trang sách</h2>
-  <p class="section-sub">Điền thông tin vào Google Form — thông tin chuyển khoản (QR + số tài khoản) đã có sẵn ngay trong form.</p>
+  <p class="section-sub">Điền thông tin vào Google Form - thông tin chuyển khoản (QR + số tài khoản) đã có sẵn ngay trong form.</p>
 
   <div class="donate-simple">
     <ol class="donate-steps-short">
       <li><span class="step-num">1</span>Bấm nút bên dưới để mở Google Form.</li>
       <li><span class="step-num">2</span>Trong form sẽ có mã QR và số tài khoản để chuyển khoản. Nội dung chuyển khoản: <b>Tên hiển thị + 4 số đuôi điện thoại</b>. Tối đa <b>200.000 VNĐ</b> / người (cộng dồn tất cả các lần).</li>
-      <li><span class="step-num">3</span>Chuyển khoản xong, đính kèm luôn ảnh xác nhận giao dịch và gửi form — tránh trường hợp quên điền form sau khi đã chuyển tiền.</li>
+      <li><span class="step-num">3</span>Chuyển khoản xong, đính kèm luôn ảnh xác nhận giao dịch và gửi form - tránh trường hợp quên điền form sau khi đã chuyển tiền.</li>
       <li><span class="step-num">4</span>Tên bạn (nếu đồng ý) sẽ xuất hiện trong tab <b>"Danh sách Donors"</b>. Bạn có thể tự kiểm tra lại chi tiết đóng góp tại tab <b>"Tra cứu"</b> bằng số điện thoại (hoặc email nếu không điền SĐT).</li>
     </ol>
 
@@ -653,9 +971,13 @@
   <div class="divider"><span class="rule"></span><span class="glyph">✦</span><span class="rule"></span></div>
   <h2 class="section-title" style="margin-bottom:8px;">Danh sách Donors</h2>
   <p class="section-sub" style="margin-bottom:28px;">Cảm ơn bạn đã cùng Vòng Tròn Nhỏ lật mở từng trang sách trong thư viện này.</p>
-  <div class="wall-stats" style="margin-bottom:28px;">
-    <div><span id="statCount">—</span><small>Trang sách đã mở</small></div>
-    <div><span id="statMsgs">—</span><small>Lời nhắn gửi chú Thỏ</small></div>
+  <div class="wall-stats" style="margin-bottom:20px;">
+    <div><span id="statCount">-</span><small>Trang sách đã mở</small></div>
+    <div><span id="statMsgs">-</span><small>Lời nhắn gửi chú Thỏ</small></div>
+  </div>
+  <div class="wall-sort" id="wallSort">
+    <button type="button" class="sort-btn active" data-sort="newest" onclick="setWallSort('newest')">Mới nhất</button>
+    <button type="button" class="sort-btn" data-sort="oldest" onclick="setWallSort('oldest')">Sớm nhất</button>
   </div>
   <div class="wall-grid" id="wallGrid">
     <div class="wall-loading">Đang lật từng trang cảm ơn…</div>
@@ -672,7 +994,7 @@
       <input type="text" id="lookupPhone" placeholder="Số điện thoại, hoặc email đã đăng ký…" inputmode="text" autocomplete="off">
       <button class="btn btn-primary" onclick="doLookup()">Mở khóa thông tin</button>
     </div>
-    <p class="lookup-note">Số điện thoại (hoặc email) đóng vai trò như mật khẩu để bạn tự kiểm tra sao kê. Thông tin chi tiết chỉ hiển thị khi trùng khớp với dữ liệu bạn đã điền — trang không hiển thị email/SĐT/ảnh của người khác công khai.</p>
+    <p class="lookup-note">Số điện thoại (hoặc email) đóng vai trò như mật khẩu để bạn tự kiểm tra sao kê. Thông tin chi tiết chỉ hiển thị khi trùng khớp với dữ liệu bạn đã điền - trang không hiển thị email/SĐT/ảnh của người khác công khai.</p>
     <div class="lookup-status" id="lookupStatus"></div>
     <div class="lookup-results" id="lookupResults"></div>
   </div>
@@ -683,20 +1005,30 @@
 <footer>
   <div class="quote">"Every story begins with someone turning the first page."</div>
   <div class="credit">
-    <div class="credit-line">⎡ Endless LIBRAry ⎦ — October Project for Thỏ (Da LAB)</div>
+    <div class="credit-line">⎡ Endless LIBRAry ⎦ - October Project for Thỏ (Da LAB)</div>
     <div class="credit-line">Thực hiện bởi <b>Vòng Tròn Nhỏ</b> · Fantom, 10/2026</div>
   </div>
 </footer>
 
 <script>
 /* ================= tab navigation ================= */
-const TAB_IDS = ['story', 'progress', 'allocation', 'donate', 'thankyou', 'lookup'];
+// Tắt tự khôi phục vị trí cuộn của trình duyệt (nó có thể ghi đè cuộn thủ công của ta).
+if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+
+const TAB_IDS = ['story', 'progress', 'projectProgress', 'eventSchedule', 'allocation', 'donate', 'thankyou', 'lookup'];
 const tabBar = document.getElementById('tabBar');
 const floatingLogo = document.querySelector('.site-logo');
-// Vị trí menu bar (khoảng cách từ đầu trang tới menu) — tính LẠI mỗi lần cần,
-// vì chiều cao hero thay đổi khi ảnh tải xong. Cache 1 lần sẽ sai -> menu rớt.
-function getTabBarAnchorY(){
-  return tabBar.offsetTop;
+// Vị trí menu bar (tuyệt đối từ đầu trang). PHẢI tính lúc load khi chưa cuộn -
+// nếu tính khi menu đang dính đỉnh (sticky, top=0) sẽ ra sai = scrollY hiện tại.
+let tabBarStaticTop = tabBar.getBoundingClientRect().top + window.scrollY;
+function recalcTabBarStaticTop(){
+  // Chỉ tính lại khi đang ở đầu trang (menu ở vị trí tự nhiên, chưa sticky).
+  if(window.scrollY < 2){
+    tabBarStaticTop = tabBar.getBoundingClientRect().top + window.scrollY;
+  }
+}
+function ensureTabBarStaticTop(){
+  return tabBarStaticTop;
 }
 const tabScrollOffsets = {};
 let currentActiveTab = 'story';
@@ -712,34 +1044,16 @@ function requestLogoDockSync(){
   if(logoDockFrame === null) logoDockFrame = requestAnimationFrame(syncLogoDock);
 }
 window.addEventListener('scroll', requestLogoDockSync, {passive:true});
-window.addEventListener('resize', requestLogoDockSync);
+window.addEventListener('resize', () => { recalcTabBarStaticTop(); requestLogoDockSync(); });
+window.addEventListener('load', recalcTabBarStaticTop);
 syncLogoDock();
-
-// Đảm bảo panel active đủ cao để trang cuộn tới mức menu dính đỉnh.
-// Cần: chiều cao dưới menu (viewport - chiều cao menu) tối thiểu bằng panel,
-// để scrollY có thể đạt tabBarAnchorY. Đặt min-height động, không thừa.
-function ensureStickyRoom(tabId){
-  const panel = document.getElementById(tabId);
-  if(!panel) return;
-  panel.style.minHeight = '';           // reset trước khi đo nội dung thật
-  const barH = tabBar.getBoundingClientRect().height;
-  const needed = Math.ceil(window.innerHeight - barH);
-  if(panel.getBoundingClientRect().height < needed){
-    panel.style.minHeight = needed + 'px';
-  }
-}
 
 function activateTab(tabId, updateHash = true){
   if(!TAB_IDS.includes(tabId)) return;
 
-  // Vị trí menu TRƯỚC khi đổi panel (để biết menu có đang dính đỉnh không).
-  const anchorBefore = getTabBarAnchorY();
-  const tabBarWasSticky = window.scrollY >= anchorBefore;
+  // Lưu vị trí cuộn tuyệt đối của tab đang rời đi.
   if(currentActiveTab && currentActiveTab !== tabId){
-    // Lưu khoảng cách tương đối từ menu, không lưu tọa độ tuyệt đối của trang.
-    tabScrollOffsets[currentActiveTab] = tabBarWasSticky
-      ? Math.max(0, window.scrollY - anchorBefore)
-      : 0;
+    tabScrollOffsets[currentActiveTab] = window.scrollY;
   }
 
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -748,32 +1062,21 @@ function activateTab(tabId, updateHash = true){
   document.querySelectorAll('.tab-panel').forEach(panel => {
     panel.classList.toggle('active', panel.id === tabId);
   });
+  syncTabMenu(tabId);
   if(updateHash){
     history.replaceState(null, '', '#' + tabId);
   }
 
-  // Đảm bảo panel active đủ cao để trang cuộn được tới mức menu dính đỉnh
-  // (làm TRƯỚC khi tính toạ độ cuộn, vì nó thay đổi chiều cao trang).
-  ensureStickyRoom(tabId);
-
-  // Tính lại vị trí menu SAU khi đổi panel (chiều cao trang có thể đã đổi).
-  const anchorAfter = getTabBarAnchorY();
-  const hasSavedPosition = Object.prototype.hasOwnProperty.call(tabScrollOffsets, tabId);
-  let targetY = hasSavedPosition
-    ? anchorAfter + tabScrollOffsets[tabId]
-    : (tabBarWasSticky ? anchorAfter : 0);
-  // Nếu menu đang dính đỉnh lúc chuyển tab -> KHÔNG để tab mới rơi lên cao hơn mức
-  // menu-dính-đỉnh. Menu chỉ rời đỉnh khi người dùng tự vuốt lên đầu trang.
-  if(tabBarWasSticky){
-    targetY = Math.max(targetY, anchorAfter);
-  }
-
-  requestAnimationFrame(() => {
-    const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    window.scrollTo({ top: Math.min(targetY, maxY), behavior: 'auto' });
-  });
-
   currentActiveTab = tabId;
+
+  // Vị trí đích: tab đã mở -> vị trí đã lưu; lần đầu -> đúng mức menu dính đỉnh.
+  const anchor = ensureTabBarStaticTop();
+  const saved = Object.prototype.hasOwnProperty.call(tabScrollOffsets, tabId)
+    ? tabScrollOffsets[tabId] : null;
+  const target = (saved !== null) ? saved : anchor;
+
+  const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  window.scrollTo({ top: Math.min(target, maxY), behavior: 'auto' });
 
   // Cuộn thanh menu ngang để nút tab đang chọn về giữa nhất có thể.
   centerActiveTab(tabId);
@@ -783,6 +1086,12 @@ function activateTab(tabId, updateHash = true){
   }
   if(tabId === 'thankyou' && typeof ensureWallLoaded === 'function'){
     setTimeout(ensureWallLoaded, 0);
+  }
+  if(tabId === 'projectProgress' && typeof ensureProjectProgressLoaded === 'function'){
+    setTimeout(ensureProjectProgressLoaded, 0);
+  }
+  if(tabId === 'eventSchedule' && typeof ensureEventScheduleLoaded === 'function'){
+    setTimeout(ensureEventScheduleLoaded, 0);
   }
 }
 
@@ -811,6 +1120,75 @@ document.querySelectorAll('[data-goto-tab]').forEach(btn => {
   btn.addEventListener('click', () => activateTab(btn.dataset.gotoTab));
 });
 
+/* ===== TAB MENU (dropdown trên màn hình hẹp) =====
+   Danh sách tab lấy trực tiếp từ .tab-row sẵn có (không hardcode lại) để thêm/bớt
+   tab chỉ cần sửa 1 chỗ duy nhất. */
+const tabMenuEl = document.getElementById('tabMenu');
+const tabMenuToggle = document.getElementById('tabMenuToggle');
+const tabMenuDropdown = document.getElementById('tabMenuDropdown');
+const tabMenuLabel = document.getElementById('tabMenuLabel');
+
+function tabLabelFor(tabId){
+  const srcBtn = document.querySelector(`.tab-row .tab-btn[data-tab="${tabId}"]`);
+  return srcBtn ? srcBtn.textContent : tabId;
+}
+
+function buildTabMenu(){
+  if(!tabMenuDropdown) return;
+  tabMenuDropdown.innerHTML = TAB_IDS.map(id =>
+    `<button type="button" class="tab-menu-item" data-tab="${id}">${tabLabelFor(id)}</button>`
+  ).join('');
+  tabMenuDropdown.querySelectorAll('.tab-menu-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activateTab(btn.dataset.tab);
+      closeTabMenu();
+    });
+  });
+}
+
+function syncTabMenu(tabId){
+  if(!tabMenuEl) return;
+  if(tabMenuLabel) tabMenuLabel.textContent = tabLabelFor(tabId);
+  tabMenuDropdown.querySelectorAll('.tab-menu-item').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabId);
+  });
+}
+
+// Dropdown nằm ngoài <nav> (sibling ở body) vì .tab-bar có overflow:hidden sẽ cắt mất
+// nó nếu đặt bên trong - dùng position:fixed, tự tính toạ độ theo nút toggle.
+function positionTabMenuDropdown(){
+  const rect = tabMenuToggle.getBoundingClientRect();
+  tabMenuDropdown.style.top = (rect.bottom + 6) + 'px';
+  tabMenuDropdown.style.left = rect.left + 'px';
+  tabMenuDropdown.style.width = rect.width + 'px';
+}
+function openTabMenu(){
+  positionTabMenuDropdown();
+  tabMenuEl.classList.add('open');
+  tabMenuDropdown.classList.add('open');
+  tabMenuToggle.setAttribute('aria-expanded', 'true');
+}
+function closeTabMenu(){
+  tabMenuEl.classList.remove('open');
+  tabMenuDropdown.classList.remove('open');
+  tabMenuToggle.setAttribute('aria-expanded', 'false');
+}
+
+if(tabMenuToggle){
+  buildTabMenu();
+  syncTabMenu(currentActiveTab);
+  tabMenuToggle.addEventListener('click', () => {
+    tabMenuDropdown.classList.contains('open') ? closeTabMenu() : openTabMenu();
+  });
+  document.addEventListener('click', (e) => {
+    if(tabMenuDropdown.classList.contains('open') && !tabMenuEl.contains(e.target) && !tabMenuDropdown.contains(e.target)){
+      closeTabMenu();
+    }
+  });
+  window.addEventListener('scroll', () => { if(tabMenuDropdown.classList.contains('open')) closeTabMenu(); }, {passive:true});
+  window.addEventListener('resize', () => { if(tabMenuDropdown.classList.contains('open')) closeTabMenu(); });
+}
+
 // mở đúng tab theo #hash khi tải trang (vd chia sẻ link .../#donate)
 (function(){
   const initial = location.hash.replace('#', '');
@@ -835,7 +1213,7 @@ document.querySelectorAll('[data-goto-tab]').forEach(btn => {
   }
 })();
 
-/* ================= data pipeline (secure — via Apps Script API) ================= */
+/* ================= data pipeline (secure - via Apps Script API) ================= */
 // 👉 Dán "Web app URL" từ Apps Script của bạn vào đây (xem hướng dẫn trong AppsScript_Code.gs)
 const API_URL = 'https://script.google.com/macros/s/AKfycbw3ms67MjRtUa3Ykwnv3BpD1L3pnbPhAqA1o8imvySTjxAci5GNNkJIk_C_ksFCD1efMA/exec';
 
@@ -856,7 +1234,7 @@ function apiConfigured(){
 // Gọi API bằng JSONP (tải qua thẻ <script>) thay vì fetch().
 // Lý do: Apps Script trả 302 chuyển hướng sang script.googleusercontent.com.
 // Khi host trên GitHub Pages (domain khác), fetch() đi qua redirect này bị mất
-// Origin (thành null) và bị trình duyệt chặn đọc response — đặc biệt với payload
+// Origin (thành null) và bị trình duyệt chặn đọc response - đặc biệt với payload
 // lớn như "wall". Thẻ <script> KHÔNG bị ràng buộc CORS và đi theo 302 tự nhiên,
 // nên tải được dữ liệu ổn định. Đây là cách chuẩn cho Apps Script + trang tĩnh.
 let jsonpCounter = 0;
@@ -961,7 +1339,7 @@ function savePublicDataCache(data){
 
 async function loadSheet(){
   if(!apiConfigured()){
-    document.getElementById('progressLoading').textContent = 'Chưa cấu hình API_URL — xem hướng dẫn trong file AppsScript_Code.gs.';
+    document.getElementById('progressLoading').textContent = 'Chưa cấu hình API_URL - xem hướng dẫn trong file AppsScript_Code.gs.';
     document.getElementById('wallGrid').innerHTML = '<div class="wall-empty">Chưa cấu hình API_URL.</div>';
     return;
   }
@@ -1036,20 +1414,47 @@ function renderProgress(progress){
     const el = document.getElementById(id);
     if(total >= milestoneAbs[i]) el.classList.add('reached');
   });
+
+  // "Tổng quỹ" ở tab Tiến độ dự án dùng chung số raised này - nếu tab đó đã render
+  // trước khi progress về tới thì re-render lại cho khớp số mới nhất.
+  PP_RAISED_TOTAL = total;
+  if(ppExpenseRowsCache && ppExpenseRowsCache.length){
+    renderBudget(ppExpenseRowsCache);
+  }
+}
+
+let wallItemsCache = [];
+let wallSortMode = 'newest';
+
+function setWallSort(mode){
+  if(mode !== 'newest' && mode !== 'oldest') return;
+  wallSortMode = mode;
+  document.querySelectorAll('#wallSort .sort-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.sort === mode);
+  });
+  renderWallCards();
 }
 
 function renderWall(wall){
-  const items = wall.items || [];
+  wallItemsCache = wall.items || [];
   document.getElementById('statCount').textContent = (wall.stats && wall.stats.count) || 0;
   document.getElementById('statMsgs').textContent = (wall.stats && wall.stats.withMsg) || 0;
+  renderWallCards();
+}
 
+function renderWallCards(){
   const grid = document.getElementById('wallGrid');
-  if(items.length === 0){
+  if(wallItemsCache.length === 0){
     grid.innerHTML = '<div class="wall-empty">Chưa có donor nào. Hãy là người đầu tiên!</div>';
     return;
   }
 
-  // Giữ đúng thứ tự từ trên xuống dưới của Google Sheet (backend đã trả về theo thứ tự này)
+  // Backend trả items theo thứ tự thời gian tăng dần (cũ -> mới), runningTotal đã tính
+  // theo thứ tự đó. Chỉ đảo THỨ TỰ HIỂN THỊ, không đụng tới runningTotal của mỗi donation.
+  const items = (wallSortMode === 'newest')
+    ? wallItemsCache.slice().reverse()
+    : wallItemsCache.slice();
+
   grid.innerHTML = '';
   items.forEach((d, idx) => {
     const card = document.createElement('div');
@@ -1113,7 +1518,7 @@ async function doLookup(){
   statusEl.className = 'lookup-status';
 
   if(!apiConfigured()){
-    statusEl.textContent = 'Chưa cấu hình API_URL — xem hướng dẫn trong file AppsScript_Code.gs.';
+    statusEl.textContent = 'Chưa cấu hình API_URL - xem hướng dẫn trong file AppsScript_Code.gs.';
     statusEl.classList.add('not-found');
     return;
   }
@@ -1169,8 +1574,8 @@ async function doLookup(){
         <div class="field"><small>Số tiền</small><span>${d.amountValid ? fmtVND(d.amount) : escapeHtml(String(d.amount))}</span></div>
         <div class="field"><small>Tên hiển thị</small><span>${escapeHtml(d.name)}</span></div>
         <div class="field"><small>Hiển thị công khai</small><span>${d.consent ? 'Có' : 'Không'}</span></div>
-        <div class="field"><small>Email</small><span>${d.email ? escapeHtml(d.email) : '—'}</span></div>
-        <div class="field"><small>Số điện thoại</small><span>${d.phone ? escapeHtml(d.phone) : '—'}</span></div>
+        <div class="field"><small>Email</small><span>${d.email ? escapeHtml(d.email) : '-'}</span></div>
+        <div class="field"><small>Số điện thoại</small><span>${d.phone ? escapeHtml(d.phone) : '-'}</span></div>
       </div>
       ${d.message ? `<div class="msg-box">"${escapeHtml(d.message)}"</div>` : ''}
       ${d.images.length ? `<div class="imgs">${imagesHtml}</div>` : ''}
@@ -1184,8 +1589,676 @@ document.getElementById('lookupPhone').addEventListener('keydown', e => {
 });
 
 
+/* ================= tab "Tiến độ dự án" (đọc trực tiếp từ Google Sheet) ================= */
+const PP_SHEET_ID = '1cr0e22AdLJCMmOnWQ3yC7OcXqckGKA0era7hlYx4nrI';
+const PP_GID_PROGRESS = '1986210992';
+
+// ⚠️ TẠM THỜI ĐANG TEST: EXPENSES trỏ sang sheet test riêng (khác hẳn PP_SHEET_ID ở trên).
+// Khi xong test, revert 2 dòng dưới về:
+//   const PP_EXPENSES_SHEET_ID = PP_SHEET_ID;
+//   const PP_GID_EXPENSES = '68979576';
+const PP_EXPENSES_SHEET_ID = '1vsHs8o4pT12PUbCrkwFW6zrhgRsRSDWHnxNQ7aApLqs';
+const PP_GID_EXPENSES = '1030339819';
+
+// Tổng quỹ = đúng số "raised" của tab Tiến trình (tổng donate thực nhận, đã trừ
+// refunded) - lấy qua renderProgress() chứ không hardcode riêng ở đây nữa.
+let PP_RAISED_TOTAL = null;
+// Lãi ngân hàng phát sinh khi giữ quỹ trong tài khoản - cộng thêm vào tổng quỹ để
+// "Còn lại" khớp đúng số dư tài khoản thực tế.
+const PP_BANK_INTEREST = 1337;
+const PP_CATEGORY_CAPS = { 'Birthday': 30000000, 'Concert': 80000000, 'Fan Cafe': 10000000 };
+
+// Sheet PROJECT_PROGRESS/EXPENSES đã chia sẻ ở chế độ xem công khai nên đọc thẳng qua
+// endpoint gviz/tq (trả JSON bọc trong 1 hàm JS) - không cần qua Apps Script API riêng.
+async function fetchGvizRows(gid, sheetId = PP_SHEET_ID){
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}&_=${Date.now()}`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('sheet_http_error');
+  const text = await res.text();
+  const match = text.match(/setResponse\(([\s\S]*)\);?\s*$/);
+  if(!match) throw new Error('sheet_parse_error');
+  const json = JSON.parse(match[1]);
+  if(json.status !== 'ok') throw new Error('sheet_status_error');
+  const cols = (json.table.cols || []).map(c => c.label || c.id);
+  return (json.table.rows || []).map(r => {
+    const obj = {};
+    cols.forEach((label, i) => {
+      const cell = r.c ? r.c[i] : null;
+      obj[label] = (cell && cell.v !== undefined) ? cell.v : null;
+      obj[label + '_f'] = (cell && cell.f !== undefined) ? cell.f : null;
+    });
+    return obj;
+  });
+}
+
+function ppDateSortKey(row){
+  const m = typeof row.expense_date === 'string' && row.expense_date.match(/Date\((\d+),(\d+),(\d+)\)/);
+  return m ? new Date(+m[1], +m[2], +m[3]).getTime() : 0;
+}
+
+function ppDateLabel(row){
+  if(row.expense_date_f){
+    const parts = row.expense_date_f.split('/');
+    if(parts.length >= 2) return `${parts[0]}.${parts[1]}`;
+  }
+  return '-';
+}
+
+let ppRequest = null;
+async function ensureProjectProgressLoaded(){
+  if(ppRequest) return ppRequest;
+  const cached = readPublicDataCache();
+  if(cached && cached.ppProgress && cached.ppExpenses){
+    renderProjectProgress(cached.ppProgress, cached.ppExpenses);
+  }
+
+  ppRequest = Promise.all([fetchGvizRows(PP_GID_PROGRESS), fetchGvizRows(PP_GID_EXPENSES, PP_EXPENSES_SHEET_ID)])
+    .then(([progressRows, expenseRows]) => {
+      renderProjectProgress(progressRows, expenseRows);
+      savePublicDataCache({ppProgress: progressRows, ppExpenses: expenseRows});
+      return [progressRows, expenseRows];
+    })
+    .catch(err => {
+      if(!(cached && cached.ppProgress)){
+        document.getElementById('ppLoading').innerHTML =
+          'Không tải được dữ liệu từ Google Sheet. Vui lòng kiểm tra mạng và thử lại. '
+          + '<button type="button" class="retry-btn" onclick="ppRequest=null;ensureProjectProgressLoaded();">Thử lại</button>';
+      }
+      console.error('Project progress sheet:', err);
+      ppRequest = null;
+    });
+  return ppRequest;
+}
+
+function renderProjectProgress(progressRows, expenseRows){
+  document.getElementById('ppLoading').style.display = 'none';
+  document.getElementById('ppContent').style.display = 'block';
+  renderWorkstreamBars(progressRows);
+  renderBudget(expenseRows);
+  renderCategoryBars(expenseRows);
+  renderStatementTable(expenseRows);
+  renderStatementGrouped(expenseRows, progressRows);
+}
+
+function renderWorkstreamBars(rows){
+  const wrap = document.getElementById('ppBars');
+  wrap.innerHTML = rows.map(r => {
+    const pct = Math.round((typeof r.progress_pct === 'number' ? r.progress_pct : 0) * 100);
+    return `
+      <div class="wp-row">
+        <div class="wp-row-head"><span>${escapeHtml(r.workstream_name || '')}</span><span>${pct}%</span></div>
+        <div class="wp-bar-track"><div class="wp-bar-fill" style="width:${Math.max(0,Math.min(100,pct))}%;"></div></div>
+      </div>`;
+  }).join('');
+}
+
+function renderBudget(expenseRows){
+  const amount = r => (typeof r.amount === 'number' ? r.amount : 0);
+  const spent = expenseRows.reduce((sum, r) => sum + amount(r), 0);
+  document.getElementById('budgetSpent').textContent = fmtVND(spent);
+
+  // Tổng quỹ phụ thuộc số "raised" của tab Tiến trình, có thể chưa tải xong tại thời
+  // điểm này - để trạng thái "đang tải" thay vì hiện tạm 1 số sai (chỉ có phần lãi).
+  if(PP_RAISED_TOTAL === null){
+    document.getElementById('budgetTotal').textContent = '…';
+    document.getElementById('budgetRemain').textContent = '…';
+    document.getElementById('budgetInterestNote').textContent = '';
+    return;
+  }
+
+  const total = PP_RAISED_TOTAL + PP_BANK_INTEREST;
+  const remain = Math.max(0, total - spent);
+  const pct = total > 0 ? Math.min(100, (spent / total) * 100) : 0;
+
+  document.getElementById('budgetRemain').textContent = fmtVND(remain);
+  document.getElementById('budgetTotal').textContent = fmtVND(total);
+  document.getElementById('budgetPct').textContent = pct.toFixed(0) + '%';
+  document.getElementById('budgetInterestNote').textContent =
+    `Đã gồm ${fmtVND(PP_BANK_INTEREST)} lãi ngân hàng phát sinh khi giữ quỹ trong tài khoản.`;
+
+  const circumference = 2 * Math.PI * 80;
+  const fill = document.getElementById('budgetDonutFill');
+  fill.style.strokeDasharray = `${circumference}`;
+  fill.style.strokeDashoffset = `${circumference - (pct / 100) * circumference}`;
+}
+
+function renderCategoryBars(expenseRows){
+  const totals = {};
+  expenseRows.forEach(r => {
+    const cat = r.category || 'Khác';
+    const amt = typeof r.amount === 'number' ? r.amount : 0;
+    totals[cat] = (totals[cat] || 0) + amt;
+  });
+  const cats = Object.keys(PP_CATEGORY_CAPS).concat(Object.keys(totals).filter(c => !(c in PP_CATEGORY_CAPS)));
+  const wrap = document.getElementById('categoryBars');
+  wrap.innerHTML = cats.map(cat => {
+    const amount = totals[cat] || 0;
+    const cap = PP_CATEGORY_CAPS[cat] || amount || 1;
+    const pct = Math.min(100, (amount / cap) * 100);
+    return `
+      <div class="wp-row">
+        <div class="wp-row-head"><span>${escapeHtml(cat)}</span><span>${fmtVND(amount)} / ${fmtVND(cap)}</span></div>
+        <div class="wp-bar-track"><div class="wp-bar-fill ${ppCategoryBadgeClass(cat)}" style="width:${Math.max(0,pct)}%;"></div></div>
+      </div>`;
+  }).join('');
+}
+
+function ppReceiptThumb(link){
+  const id = driveIdFromLink(link);
+  if(!id) return `<a class="receipt-thumb fallback" href="${link}" target="_blank" rel="noopener">Xem</a>`;
+  const thumb = `https://drive.google.com/thumbnail?id=${id}&sz=w200`;
+  return `<a class="receipt-thumb" href="${link}" target="_blank" rel="noopener"><img src="${thumb}" loading="lazy" onerror="this.parentElement.outerHTML='<a class=\\'receipt-thumb fallback\\' href=\\'${link}\\' target=\\'_blank\\' rel=\\'noopener\\'>Xem</a>'"></a>`;
+}
+
+function ppCategoryBadgeClass(cat){
+  const key = String(cat || '').trim().toLowerCase();
+  if(key === 'birthday') return 'cat-birthday';
+  if(key === 'concert') return 'cat-concert';
+  if(key === 'fan cafe') return 'cat-fancafe';
+  return 'cat-other';
+}
+
+const PP_LOCKED_LABEL = '<span class="locked">🔒 Chưa công khai</span>';
+
+let ppExpenseRowsCache = [];
+let ppSortState = { key: 'date', dir: 'desc' };
+
+function ppSortValue(row, key){
+  if(key === 'date') return ppDateSortKey(row);
+  if(key === 'category') return String(row.category || '').toLowerCase();
+  if(key === 'description') return String(row.description || '').toLowerCase();
+  return 0;
+}
+
+function ppSortRows(rows){
+  const dir = ppSortState.dir === 'asc' ? 1 : -1;
+  const key = ppSortState.key;
+  return rows.slice().sort((a, b) => {
+    const av = ppSortValue(a, key);
+    const bv = ppSortValue(b, key);
+    if(av < bv) return -1 * dir;
+    if(av > bv) return 1 * dir;
+    return ppDateSortKey(b) - ppDateSortKey(a);
+  });
+}
+
+function ppSetSort(key){
+  if(ppSortState.key === key){
+    ppSortState.dir = ppSortState.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    ppSortState.key = key;
+    ppSortState.dir = key === 'date' ? 'desc' : 'asc';
+  }
+  renderStatementTable(ppExpenseRowsCache);
+}
+
+function ppUpdateSortIndicators(){
+  document.querySelectorAll('.statement-table th.sortable').forEach(th => {
+    const arrow = th.querySelector('.sort-arrow');
+    if(th.dataset.sortKey === ppSortState.key){
+      th.classList.add('sort-active');
+      arrow.textContent = ppSortState.dir === 'asc' ? '▲' : '▼';
+    } else {
+      th.classList.remove('sort-active');
+      arrow.textContent = '↕';
+    }
+  });
+}
+
+function renderStatementTable(expenseRows){
+  ppExpenseRowsCache = expenseRows;
+  const body = document.getElementById('statementBody');
+  ppUpdateSortIndicators();
+  const rows = ppSortRows(expenseRows);
+  if(rows.length === 0){
+    body.innerHTML = `<tr><td colspan="7" class="statement-empty">Chưa có khoản chi nào được ghi nhận.</td></tr>`;
+    return;
+  }
+  body.innerHTML = rows.map(r => {
+    const published = String(r.published || '').trim().toLowerCase() === 'yes';
+    const desc = published ? escapeHtml(r.description || '-') : PP_LOCKED_LABEL;
+    const vendor = published ? escapeHtml(r.vendor || '-') : PP_LOCKED_LABEL;
+    const note = published ? escapeHtml(r.note || '-') : PP_LOCKED_LABEL;
+    let receipts = PP_LOCKED_LABEL;
+    if(published){
+      const links = String(r.receipt_url || '').split(',').map(s => s.trim()).filter(Boolean);
+      receipts = links.length ? `<div class="receipt-thumbs">${links.map(ppReceiptThumb).join('')}</div>` : '-';
+    }
+    return `
+      <tr>
+        <td>${ppDateLabel(r)}</td>
+        <td><span class="category-badge ${ppCategoryBadgeClass(r.category)}">${escapeHtml(r.category || '-')}</span></td>
+        <td class="pin-content">${desc}</td>
+        <td>${vendor}</td>
+        <td>${note}</td>
+        <td>${fmtVND(typeof r.amount === 'number' ? r.amount : 0)}</td>
+        <td>${receipts}</td>
+      </tr>`;
+  }).join('');
+}
+
+function ppCellValue(v){
+  if(v === null || v === undefined || v === '') return '-';
+  if(typeof v === 'number') return v.toLocaleString('vi-VN');
+  return escapeHtml(String(v));
+}
+
+// Sheet gán kiểu "number" cho cả cột (Số lượng/Báo giá) nên 1 ô chứa chữ (vd "trọn gói")
+// sẽ bị gviz trả v:null - nhưng chữ gốc vẫn còn trong field "<ten>_f" (giá trị hiển thị
+// trên sheet). Ưu tiên v khi dùng được, nếu không thì lấy lại chữ gốc từ "_f" thay vì bỏ qua.
+function ppFieldText(row, field){
+  const f = row[field + '_f'];
+  if(f !== null && f !== undefined && String(f).trim() !== '') return String(f).trim();
+  const v = row[field];
+  if(typeof v === 'number') return v.toLocaleString('vi-VN');
+  return (v !== null && v !== undefined && v !== '') ? String(v).trim() : '';
+}
+
+function ppPrettifyWorkstreamId(id){
+  return id.toLowerCase().split('_').filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+// Gộp các dòng chi trùng description/vendor/Số lượng/Báo giá/receipt_url (thường là
+// 1 khoản bị chia làm nhiều dòng ghi sổ, vd cọc + thanh toán cuối cùng nội dung) thành
+// 1 dòng hiển thị: Thành tiền = tổng, Note = gộp (loại trùng), Status = gộp nếu khác nhau.
+function ppMergeStatementRows(rows){
+  const buckets = [];
+  const indexByKey = {};
+  rows.forEach(r => {
+    const key = [
+      String(r.description || '').trim(),
+      String(r.vendor || '').trim(),
+      ppFieldText(r, 'Số lượng'),
+      ppFieldText(r, 'Báo giá'),
+      String(r.receipt_url || '').trim(),
+    ].join('|');
+    if(!(key in indexByKey)){ indexByKey[key] = buckets.length; buckets.push([]); }
+    buckets[indexByKey[key]].push(r);
+  });
+
+  return buckets.map(items => {
+    const base = items[0];
+    const amount = items.reduce((sum, r) => sum + (typeof r.amount === 'number' ? r.amount : 0), 0);
+    const notes = [];
+    items.forEach(r => {
+      const n = String(r.note || '').trim();
+      if(n && !notes.includes(n)) notes.push(n);
+    });
+    const published = items.every(r => String(r.published || '').trim().toLowerCase() === 'yes');
+    return {
+      description: base.description, vendor: base.vendor,
+      quantity: ppFieldText(base, 'Số lượng'), unitPrice: ppFieldText(base, 'Báo giá'), receipt_url: base.receipt_url,
+      amount, notes, published,
+      dateKey: Math.min(...items.map(ppDateSortKey)),
+    };
+  });
+}
+
+function renderStatementGrouped(expenseRows, progressRows){
+  const body = document.getElementById('statementGroupedBody');
+  if(expenseRows.length === 0){
+    body.innerHTML = `<tr><td colspan="8" class="statement-empty">Chưa có khoản chi nào được ghi nhận.</td></tr>`;
+    return;
+  }
+
+  // Tên đẹp lấy từ sheet PROGRESS nếu có; nhóm thực tế luôn bám theo workstream_id
+  // xuất hiện trong chính sheet EXPENSES, nên thêm/bớt/đổi workstream_id ở 1 trong 2
+  // sheet (không cần đồng bộ cả hai) vẫn tự lên nhóm đúng, không cần sửa code.
+  const nameMap = {};
+  const progressOrder = [];
+  progressRows.forEach(r => {
+    if(r.workstream_id){
+      nameMap[r.workstream_id] = r.workstream_name || r.workstream_id;
+      progressOrder.push(r.workstream_id);
+    }
+  });
+
+  const groups = {};
+  const firstSeenOrder = [];
+  expenseRows.forEach(r => {
+    const key = String(r.workstream_id || '').trim() || 'KHAC';
+    if(!groups[key]){ groups[key] = []; firstSeenOrder.push(key); }
+    groups[key].push(r);
+  });
+
+  const order = [
+    ...progressOrder.filter(id => groups[id]),
+    ...firstSeenOrder.filter(key => key !== 'KHAC' && !progressOrder.includes(key)),
+  ];
+  if(groups.KHAC) order.push('KHAC');
+
+  let stt = 0;
+  let grandTotal = 0;
+  const html = [];
+
+  order.forEach(key => {
+    const label = key === 'KHAC' ? 'Khác' : (nameMap[key] || ppPrettifyWorkstreamId(key));
+    const items = groups[key].slice().sort((a, b) => ppDateSortKey(a) - ppDateSortKey(b));
+    let groupTotal = 0;
+
+    html.push(`
+      <tr class="group-header-row">
+        <td></td><td class="pin-content">${escapeHtml(label)}</td><td></td><td></td><td></td><td></td><td></td><td></td>
+      </tr>`);
+
+    const merged = ppMergeStatementRows(items).sort((a, b) => a.dateKey - b.dateKey);
+
+    merged.forEach(m => {
+      stt++;
+      const desc = m.published ? escapeHtml(m.description || '-') : PP_LOCKED_LABEL;
+      const vendor = m.published ? escapeHtml(m.vendor || '-') : PP_LOCKED_LABEL;
+      const note = m.published
+        ? (m.notes.length ? m.notes.map(n => `<div>${escapeHtml(n)}</div>`).join('') : '-')
+        : PP_LOCKED_LABEL;
+      let receipts = PP_LOCKED_LABEL;
+      if(m.published){
+        const links = String(m.receipt_url || '').split(',').map(s => s.trim()).filter(Boolean);
+        receipts = links.length ? `<div class="receipt-thumbs">${links.map(ppReceiptThumb).join('')}</div>` : '-';
+      }
+      groupTotal += m.amount;
+      const unitPrice = m.unitPrice ? escapeHtml(m.unitPrice) : '-';
+
+      html.push(`
+        <tr>
+          <td>${stt}</td>
+          <td class="pin-content">${desc}</td>
+          <td>${vendor}</td>
+          <td>${note}</td>
+          <td>${ppCellValue(m.quantity)}</td>
+          <td>${unitPrice}</td>
+          <td>${fmtVND(m.amount)}</td>
+          <td>${receipts}</td>
+        </tr>`);
+    });
+
+    grandTotal += groupTotal;
+    html.push(`
+      <tr class="group-subtotal-row">
+        <td></td><td class="pin-content">TỔNG ${escapeHtml(label.toUpperCase())}</td><td></td><td></td><td></td><td></td><td>${fmtVND(groupTotal)}</td><td></td>
+      </tr>`);
+  });
+
+  html.push(`
+    <tr class="grand-total-row">
+      <td></td><td class="pin-content">TỔNG CHI</td><td></td><td></td><td></td><td></td><td>${fmtVND(grandTotal)}</td><td></td>
+    </tr>`);
+  body.innerHTML = html.join('');
+}
+
+document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.dataset.view;
+    document.getElementById('statementView-timeline').style.display = view === 'timeline' ? '' : 'none';
+    document.getElementById('statementView-grouped').style.display = view === 'grouped' ? '' : 'none';
+  });
+});
+
+/* ================= tab "Lịch sự kiện" (đọc trực tiếp từ Google Sheet) ================= */
+const EV_GID = '2051390357';
+
+// Mảng số nguyên [năm, tháng(0-11), ngày, giờ, phút, giây] từ chuỗi "Date(...)" của gviz.
+function evParseDateParts(v){
+  if(typeof v !== 'string') return null;
+  const m = v.match(/Date\(([^)]+)\)/);
+  if(!m) return null;
+  return m[1].split(',').map(Number);
+}
+
+function evCombineDateTime(dateVal, timeVal, endOfDay){
+  const d = evParseDateParts(dateVal);
+  if(!d) return null;
+  let h = 0, mi = 0, s = 0;
+  if(timeVal){
+    const t = evParseDateParts(timeVal);
+    if(t && t.length >= 6){ h = t[3]; mi = t[4]; s = t[5]; }
+  } else if(endOfDay){
+    h = 23; mi = 59; s = 59;
+  }
+  return new Date(d[0], d[1], d[2], h, mi, s);
+}
+
+function evDateLabel(v){
+  const d = evParseDateParts(v);
+  if(!d) return '';
+  return `${String(d[2]).padStart(2,'0')}.${String(d[1]+1).padStart(2,'0')}`;
+}
+
+function evTimeLabel(v){
+  const t = evParseDateParts(v);
+  if(!t || t.length < 6) return '';
+  return `${String(t[3]).padStart(2,'0')}:${String(t[4]).padStart(2,'0')}`;
+}
+
+function evTimeRangeLabel(row){
+  const start = evTimeLabel(row.start_time);
+  const end = row.end_time ? evTimeLabel(row.end_time) : '';
+  return end ? `${start} - ${end}` : start;
+}
+
+// Có end_time -> tách 2 dòng (giờ bắt đầu / giờ kết thúc) thay vì viết liền trên 1
+// dòng, để độ rộng ô giờ không đổi theo từng card -> icon/tiêu đề các card thẳng hàng.
+function evRenderTimeHtml(row){
+  const start = evTimeLabel(row.start_time);
+  const end = row.end_time ? evTimeLabel(row.end_time) : '';
+  if(!end) return escapeHtml(start);
+  return `<span>${escapeHtml(start)}</span><span>.</span><span class="event-time-end">${escapeHtml(end)}</span>`;
+}
+
+function evIsDateRange(row){
+  if(!row.event_date_end) return false;
+  const s = evParseDateParts(row.event_date_start);
+  const e = evParseDateParts(row.event_date_end);
+  if(!s || !e) return false;
+  return !(s[0] === e[0] && s[1] === e[1] && s[2] === e[2]);
+}
+
+// Sự kiện không có end_time/end_date rõ ràng -> giả định kéo dài 2 tiếng để tính trạng thái.
+const EVENT_DEFAULT_DURATION_MS = 2 * 60 * 60 * 1000;
+
+function evComputeRange(row){
+  const start = evCombineDateTime(row.event_date_start, row.start_time, false);
+  let end = null;
+  if(row.end_time){
+    end = evCombineDateTime(row.event_date_end || row.event_date_start, row.end_time, false);
+  } else if(row.event_date_end){
+    end = evCombineDateTime(row.event_date_end, null, true);
+  } else if(start){
+    end = new Date(start.getTime() + EVENT_DEFAULT_DURATION_MS);
+  }
+  return {start, end};
+}
+
+function evAutoStatus(row){
+  const {start, end} = evComputeRange(row);
+  const now = new Date();
+  if(!start) return {label: 'Sắp diễn ra', cls: 'st-upcoming'};
+  if(now < start) return {label: 'Sắp diễn ra', cls: 'st-upcoming'};
+  if(end && now > end) return {label: 'Đã diễn ra', cls: 'st-past'};
+  return {label: 'Đang diễn ra', cls: 'st-ongoing'};
+}
+
+// Cột "status" trên sheet: "Default" -> tự tính theo thời gian thực; các giá trị khác
+// (Có thay đổi / Hủy / Hết chỗ) là do người điều phối chủ động cập nhật -> ưu tiên hiển thị.
+const EVENT_STATUS_OVERRIDES = {
+  'có thay đổi': {label: 'Có thay đổi', cls: 'st-changed'},
+  'hủy': {label: 'Đã huỷ', cls: 'st-cancelled'},
+  'huỷ': {label: 'Đã huỷ', cls: 'st-cancelled'},
+  'hết chỗ': {label: 'Hết chỗ', cls: 'st-full'},
+};
+
+function evResolveStatus(row){
+  const raw = String(row.status || '').trim().toLowerCase();
+  if(raw && raw !== 'default' && EVENT_STATUS_OVERRIDES[raw]){
+    return EVENT_STATUS_OVERRIDES[raw];
+  }
+  return evAutoStatus(row);
+}
+
+const EVENT_ICONS = {
+  'fan cafe': '☕',
+  'photoframe': '📷',
+  'led': '✦',
+  'booth': '📖',
+  'concert': '🎵',
+};
+function evIconFor(type){
+  return EVENT_ICONS[String(type || '').trim().toLowerCase()] || '✦';
+}
+
+function evRenderMetaHtml(row){
+  const status = evResolveStatus(row);
+  const capacityHtml = row.capacity ? `<small>Giới hạn ${row.capacity} chỗ</small>` : '';
+  return `
+    <div class="event-meta">
+      <span class="status-pill ${status.cls}">${status.label}</span>
+      ${capacityHtml}
+    </div>`;
+}
+
+function evGCalDateFmt(d){
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+}
+
+// Không có 'Z' cuối chuỗi -> Google Calendar hiểu là giờ địa phương theo múi giờ mặc định
+// của người xem, đúng ý vì cả sự kiện lẫn đa số người xem đều ở Việt Nam.
+function evGCalLink(row){
+  const {start, end} = evComputeRange(row);
+  if(!start) return null;
+  const endDate = end || new Date(start.getTime() + EVENT_DEFAULT_DURATION_MS);
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: row.title || '',
+    dates: `${evGCalDateFmt(start)}/${evGCalDateFmt(endDate)}`,
+    details: '⎡ Endless LIBRAry ⎦ - October Project for Thỏ (Da LAB)',
+    location: row.venue || '',
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}
+
+function evRenderDetailLink(row){
+  return row.link_details
+    ? `<div class="event-actions"><a class="detail-link" href="${row.link_details}" target="_blank" rel="noopener">Chi tiết →</a></div>`
+    : '';
+}
+
+function evRenderGCalBtn(row){
+  const gcalLink = evGCalLink(row);
+  if(!gcalLink) return '';
+  return `<a class="gcal-btn" href="${gcalLink}" target="_blank" rel="noopener">`
+    + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'
+    + '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4M16 3v4"/><path d="M12 13v6M9 16h6"/>'
+    + '</svg>Add to Calendar</a>';
+}
+
+function evRenderRangedBanner(row){
+  const rangeLabel = `${evDateLabel(row.event_date_start)} – ${evDateLabel(row.event_date_end)}`;
+  return `
+    <div class="event-range-banner">
+      <div class="event-icon">${evIconFor(row.event_type)}</div>
+      <div class="event-info">
+        <h3>${escapeHtml(row.title || '')}</h3>
+        <p class="event-range-label">Diễn ra xuyên suốt ${rangeLabel}</p>
+        <p>${evTimeRangeLabel(row)} · ${escapeHtml(row.venue || '')}</p>
+        ${evRenderDetailLink(row)}
+      </div>
+      ${evRenderMetaHtml(row)}
+      ${evRenderGCalBtn(row)}
+    </div>`;
+}
+
+function evRenderCard(row){
+  return `
+    <article class="event-card">
+      <div class="event-time">${evRenderTimeHtml(row)}</div>
+      <div class="event-icon">${evIconFor(row.event_type)}</div>
+      <div class="event-info">
+        <h3>${escapeHtml(row.title || '')}</h3>
+        <p>${escapeHtml(row.venue || '')}</p>
+        ${evRenderDetailLink(row)}
+      </div>
+      ${evRenderMetaHtml(row)}
+      ${evRenderGCalBtn(row)}
+    </article>`;
+}
+
+function evRenderDayGroup(dateKey, rows){
+  const d = evParseDateParts(dateKey);
+  const dayNum = d ? d[2] : '?';
+  const monthNum = d ? d[1] + 1 : '?';
+  const cardsHtml = rows.map(evRenderCard).join('');
+  return `
+    <div class="event-date-block">
+      <div class="event-date"><strong>${dayNum}</strong><span>Tháng ${monthNum}</span></div>
+      <div class="event-stack">${cardsHtml}</div>
+    </div>`;
+}
+
+function renderEventSchedule(rows){
+  document.getElementById('evLoading').style.display = 'none';
+  document.getElementById('evContent').style.display = 'block';
+
+  const ranged = rows.filter(evIsDateRange);
+  const singles = rows.filter(r => !evIsDateRange(r));
+
+  const groups = {};
+  singles.forEach(r => {
+    const key = r.event_date_start;
+    if(!groups[key]) groups[key] = [];
+    groups[key].push(r);
+  });
+  const sortedKeys = Object.keys(groups).sort((a, b) => {
+    const da = evCombineDateTime(a, null, false);
+    const db = evCombineDateTime(b, null, false);
+    return (da ? da.getTime() : 0) - (db ? db.getTime() : 0);
+  });
+  sortedKeys.forEach(k => {
+    groups[k].sort((a, b) => {
+      const ta = evCombineDateTime(a.event_date_start, a.start_time, false);
+      const tb = evCombineDateTime(b.event_date_start, b.start_time, false);
+      return (ta ? ta.getTime() : 0) - (tb ? tb.getTime() : 0);
+    });
+  });
+
+  const rangedHtml = ranged.map(evRenderRangedBanner).join('');
+  const groupsHtml = sortedKeys.map(k => evRenderDayGroup(k, groups[k])).join('');
+
+  document.getElementById('eventTimeline').innerHTML = rangedHtml + groupsHtml
+    || '<div class="statement-empty">Chưa có lịch sự kiện nào được công bố.</div>';
+}
+
+let evRequest = null;
+async function ensureEventScheduleLoaded(){
+  if(evRequest) return evRequest;
+  const cached = readPublicDataCache();
+  if(cached && cached.events) renderEventSchedule(cached.events);
+
+  evRequest = fetchGvizRows(EV_GID)
+    .then(rows => {
+      renderEventSchedule(rows);
+      savePublicDataCache({events: rows});
+      return rows;
+    })
+    .catch(err => {
+      if(!(cached && cached.events)){
+        document.getElementById('evLoading').innerHTML =
+          'Không tải được lịch sự kiện. Vui lòng kiểm tra mạng và thử lại. '
+          + '<button type="button" class="retry-btn" onclick="evRequest=null;ensureEventScheduleLoaded();">Thử lại</button>';
+      }
+      console.error('Event schedule sheet:', err);
+      evRequest = null;
+    });
+  return evRequest;
+}
+
 loadSheet();
 if(document.getElementById('thankyou').classList.contains('active')) ensureWallLoaded();
+if(document.getElementById('projectProgress').classList.contains('active')) ensureProjectProgressLoaded();
+if(document.getElementById('eventSchedule').classList.contains('active')) ensureEventScheduleLoaded();
 
 /* ================= NHẠC NỀN (YouTube IFrame API) ================= */
 (function(){
