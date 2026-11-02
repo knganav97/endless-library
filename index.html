@@ -154,6 +154,9 @@
 
   section{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:90px 24px;}
   .container-wide{max-width:1080px;}
+  @media (max-width:640px){
+    section{padding-left:10px;padding-right:10px;}
+  }
 
   /* dividers */
   .divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 auto 28px;width:fit-content;}
@@ -363,6 +366,9 @@
   .wp-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:22px;align-items:stretch;}
   @media (max-width:820px){.wp-grid{grid-template-columns:1fr;}}
   .wp-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:20px;padding:clamp(22px,4vw,36px);}
+  @media (max-width:640px){
+    .wp-card{padding-left:10px;padding-right:10px;}
+  }
   .wp-card-title{font-family:var(--serif);font-style:italic;color:var(--gold-bright);font-size:20px;margin-bottom:22px;}
 
   .wp-row{margin-bottom:20px;}
@@ -391,14 +397,17 @@
   .budget-tile span{font-family:var(--serif);font-size:17px;color:var(--paper);}
   .budget-interest-note{text-align:center;color:var(--paper-dim);font-size:11.5px;font-style:italic;margin-top:12px;line-height:1.6;}
 
+  .balance-proof{margin-top:18px;padding-top:18px;border-top:1px dashed var(--card-border);text-align:center;}
+  .balance-proof-label{display:block;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-dim);margin-bottom:10px;}
+  .balance-proof-img-link{display:block;max-width:320px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid var(--card-border);transition:border-color .2s ease;}
+  .balance-proof-img-link:hover{border-color:var(--gold);}
+  .balance-proof-img-link img{display:block;width:100%;height:auto;}
+  .balance-proof-link{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--gold);text-decoration:none;border-bottom:1px dashed var(--gold);}
+  .balance-proof-link:hover{color:var(--gold-bright);}
+
   .statement-card{margin-top:22px;}
   .statement-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:24px;}
   .statement-head .wp-card-title{margin-bottom:0;}
-
-  .view-toggle{display:flex;gap:8px;flex-wrap:wrap;}
-  .view-toggle-btn{background:transparent;border:1px solid var(--card-border);color:var(--paper-dim);border-radius:999px;padding:7px 16px;font-size:12.5px;cursor:pointer;font-family:var(--sans);transition:all .2s ease;}
-  .view-toggle-btn:hover{color:var(--paper);border-color:var(--gold);}
-  .view-toggle-btn.active{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#241407;font-weight:600;border-color:transparent;}
 
   .category-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 24px;margin-top:26px;padding-top:26px;border-top:1px dashed var(--card-border);}
   @media (max-width:640px){.category-bars{grid-template-columns:1fr;}}
@@ -425,12 +434,29 @@
   .scrollbar-track-v.visible{display:block;}
   .scrollbar-thumb-v{width:100%;border-radius:999px;background:linear-gradient(180deg,var(--violet-glow),var(--gold));height:0%;}
   .statement-table{border-collapse:collapse;table-layout:fixed;}
+  .statement-table-grouped{width:986px;}
+  .statement-table col.col-content{width:190px;}
+  .statement-table col.col-vendor{width:120px;}
+  .statement-table col.col-note{width:190px;}
+  .statement-table col.col-amount{width:140px;}
+  .statement-table col.col-receipt{width:126px;}
+  .statement-table col.col-stt{width:50px;}
+  .statement-table col.col-qty{width:70px;}
+  .statement-table col.col-price{width:100px;}
+  /* Màn hình hẹp: thu nhỏ cột, đặc biệt "Nội dung" (đang ghim) để không chiếm gần hết
+     màn hình, chừa chỗ thấy thêm cột kế bên khi cuộn. */
+  @media (max-width:640px){
+    .statement-table-grouped{width:785px;}
+    .statement-table col.col-content{width:140px;}
+    .statement-table col.col-vendor{width:100px;}
+    .statement-table col.col-note{width:140px;}
+    .statement-table col.col-amount{width:115px;}
+    .statement-table col.col-receipt{width:100px;}
+    .statement-table col.col-stt{width:40px;}
+    .statement-table col.col-qty{width:60px;}
+    .statement-table col.col-price{width:90px;}
+  }
   .statement-table th{text-align:left;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--paper-dim);padding:10px 12px 12px;border-bottom:1px solid var(--card-border);white-space:nowrap;position:sticky;top:0;z-index:3;background:var(--card-solid);}
-  .statement-table th.sortable{cursor:pointer;user-select:none;transition:color .2s ease;}
-  .statement-table th.sortable:hover{color:var(--paper);}
-  .statement-table th.sortable.sort-active{color:var(--gold-bright);}
-  .statement-table th .sort-arrow{display:inline-block;margin-left:4px;font-size:9px;color:var(--paper-dim);opacity:.5;}
-  .statement-table th.sortable.sort-active .sort-arrow{color:var(--gold-bright);opacity:1;}
   .statement-table td{padding:14px 12px;font-size:13.5px;color:var(--paper);border-bottom:1px dashed var(--card-border);vertical-align:top;overflow-wrap:break-word;}
   .statement-table tr:last-child td{border-bottom:none;}
   .statement-table .locked{color:var(--paper-dim);font-style:italic;font-size:12.5px;white-space:nowrap;}
@@ -440,17 +466,12 @@
   .statement-footnote{text-align:center;color:var(--paper-dim);font-size:12px;font-style:italic;line-height:1.7;margin-top:18px;}
 
   .statement-table tr.group-header-row td{background:rgba(216,184,119,0.08);color:var(--gold-bright);font-family:var(--serif);font-style:italic;font-size:15px;padding:10px 12px;border-bottom:1px solid var(--card-border);}
-  .statement-table tr.group-subtotal-row td{background:rgba(255,255,255,0.03);color:var(--paper);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px dashed var(--card-border);white-space:nowrap;}
-  .statement-table tr.grand-total-row td{background:rgba(216,184,119,0.14);color:var(--gold-bright);font-weight:700;font-size:14px;border-top:2px solid var(--gold);border-bottom:none;white-space:nowrap;}
+  .statement-table tr.group-subtotal-row td{background:rgba(255,255,255,0.03);color:var(--paper);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px dashed var(--card-border);white-space:normal;}
+  .statement-table tr.grand-total-row td{background:rgba(216,184,119,0.14);color:var(--gold-bright);font-weight:700;font-size:14px;border-top:2px solid var(--gold);border-bottom:none;white-space:normal;}
   .statement-table tr.group-header-row td.pin-content{background:#261f3a;}
   .statement-table tr.group-subtotal-row td.pin-content{background:#1e1632;}
   .statement-table tr.grand-total-row td.pin-content{background:#332637;}
 
-  .category-badge{display:inline-block;padding:4px 12px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap;border:1px solid transparent;}
-  .category-badge.cat-birthday{background:rgba(216,184,119,0.16);color:var(--gold-bright);border-color:rgba(216,184,119,0.42);}
-  .category-badge.cat-concert{background:rgba(138,92,246,0.18);color:#cdb9fd;border-color:rgba(138,92,246,0.45);}
-  .category-badge.cat-fancafe{background:rgba(224,120,190,0.18);color:#f0b6de;border-color:rgba(224,120,190,0.42);}
-  .category-badge.cat-other{background:rgba(255,255,255,0.06);color:var(--paper-dim);border-color:var(--card-border);}
   .statement-empty{text-align:center;color:var(--paper-dim);padding:30px 0;}
 
   .receipt-thumbs{display:flex;gap:6px;flex-wrap:wrap;}
@@ -507,6 +528,38 @@
     .event-meta{grid-column:3;text-align:left;display:flex;align-items:center;gap:8px;}
     .event-range-banner .event-meta{grid-column:2;}
     .event-meta small{margin:0;}
+  }
+
+  /* ===== MEMORIES ===== */
+  .memories-filter{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:28px;}
+  .memories-filter-btn{background:transparent;border:1px solid var(--card-border);color:var(--paper-dim);border-radius:999px;padding:8px 18px;font-size:13px;cursor:pointer;font-family:var(--sans);transition:all .2s ease;}
+  .memories-filter-btn:hover{color:var(--paper);border-color:var(--gold);}
+  .memories-filter-btn.active{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#241407;font-weight:600;border-color:transparent;}
+
+  .memories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+  .memories-item{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;border:1px solid var(--card-border);cursor:pointer;background:rgba(255,255,255,0.03);transition:border-color .2s ease,transform .2s ease;}
+  .memories-item:hover{border-color:var(--gold);transform:translateY(-2px);}
+  .memories-item img{display:block;width:100%;height:100%;object-fit:cover;}
+  .memories-item .memories-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(11,7,24,0.22);}
+  .memories-item .memories-play svg{width:34px;height:34px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));}
+  .memories-empty{text-align:center;color:var(--paper-dim);padding:40px 0;grid-column:1/-1;}
+
+  .memories-lightbox{display:none;position:fixed;inset:0;z-index:100;background:rgba(5,3,12,0.94);align-items:center;justify-content:center;padding:env(safe-area-inset-top,0px) 56px env(safe-area-inset-bottom,0px);}
+  .memories-lightbox.open{display:flex;}
+  .memories-lightbox-stage{max-width:min(960px,92vw);max-height:88vh;width:100%;display:flex;align-items:center;justify-content:center;}
+  .memories-lightbox-stage img{display:block;max-width:100%;max-height:88vh;width:auto;height:auto;border-radius:10px;margin:0 auto;}
+  .memories-lightbox-stage iframe{width:min(960px,92vw);height:min(540px,70vh);border:none;border-radius:10px;background:#000;}
+  .memories-lightbox-close{position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--card-border);color:var(--paper);font-size:18px;cursor:pointer;z-index:2;}
+  .memories-lightbox-close:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .memories-lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--card-border);color:var(--paper);font-size:26px;line-height:1;cursor:pointer;z-index:2;}
+  .memories-lightbox-nav:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .memories-lightbox-nav.prev{left:10px;}
+  .memories-lightbox-nav.next{right:10px;}
+  @media (max-width:640px){
+    .memories-lightbox{padding:env(safe-area-inset-top,0px) 44px env(safe-area-inset-bottom,0px);}
+    .memories-lightbox-nav{width:36px;height:36px;font-size:20px;}
+    .memories-lightbox-nav.prev{left:4px;}
+    .memories-lightbox-nav.next{right:4px;}
   }
 
   /* ===== FUND CARDS ===== */
@@ -710,6 +763,7 @@
       <button class="tab-btn" data-tab="progress">Tiến trình</button>
       <button class="tab-btn" data-tab="projectProgress">Tiến độ dự án</button>
       <button class="tab-btn" data-tab="eventSchedule">Lịch sự kiện</button>
+      <button class="tab-btn" data-tab="memories">Memories</button>
       <button class="tab-btn" data-tab="allocation">Phân bổ quỹ</button>
       <button class="tab-btn" data-tab="donate">Donate</button>
       <button class="tab-btn" data-tab="thankyou">Danh sách Donors</button>
@@ -830,50 +884,23 @@
           <div class="budget-tile"><small>Còn lại</small><span id="budgetRemain">0₫</span></div>
         </div>
         <p class="budget-interest-note" id="budgetInterestNote"></p>
+
+        <div class="balance-proof">
+          <small class="balance-proof-label">Số dư cuối cùng trong quỹ</small>
+          <a href="https://drive.google.com/file/d/1NdISaGWP9x34TdG1sostqwgADHBh8F2Q/view" target="_blank" rel="noopener" class="balance-proof-img-link">
+            <img src="https://drive.google.com/thumbnail?id=1NdISaGWP9x34TdG1sostqwgADHBh8F2Q&sz=w1000" alt="Ảnh chụp số dư cuối cùng trong quỹ" loading="lazy">
+          </a>
+          <a href="https://drive.google.com/drive/folders/12MB0XkS9EDf1_JGLxnxoZRlNV68WMYbJ" target="_blank" rel="noopener" class="balance-proof-link">Xem sao kê của ngân hàng &amp; tất toán quỹ sang tài khoản mới →</a>
+        </div>
       </div>
     </div>
 
     <div class="wp-card statement-card">
       <div class="statement-head">
         <h3 class="wp-card-title">Sao kê chi tiêu</h3>
-        <div class="view-toggle" id="statementViewToggle">
-          <button type="button" class="view-toggle-btn active" data-view="timeline">Theo thời gian</button>
-          <button type="button" class="view-toggle-btn" data-view="grouped">Theo hạng mục</button>
-        </div>
       </div>
 
-      <div id="statementView-timeline">
-        <div class="scroll-hint">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M15 7l5 5-5 5"/></svg>
-          Vuốt/cuộn ngang để xem đầy đủ bảng
-        </div>
-
-        <div class="statement-scroll-area">
-          <div class="statement-table-wrap" id="statementWrapTimeline">
-            <table class="statement-table" style="width:958px;">
-              <colgroup>
-                <col style="width:78px;"><col style="width:136px;"><col style="width:190px;">
-                <col style="width:120px;"><col style="width:190px;">
-                <col style="width:118px;"><col style="width:126px;">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th class="sortable" data-sort-key="date" onclick="ppSetSort('date')">Ngày<span class="sort-arrow"></span></th>
-                  <th class="sortable" data-sort-key="category" onclick="ppSetSort('category')">Hạng mục<span class="sort-arrow"></span></th>
-                  <th class="sortable pin-content" data-sort-key="description" onclick="ppSetSort('description')">Nội dung<span class="sort-arrow"></span></th>
-                  <th>Vendor</th>
-                  <th>Note</th><th>Số tiền</th><th>Chứng từ</th>
-                </tr>
-              </thead>
-              <tbody id="statementBody"></tbody>
-            </table>
-          </div>
-          <div class="scrollbar-track-v" id="scrollbarTrackTimelineV"><div class="scrollbar-thumb-v"></div></div>
-        </div>
-        <div class="scrollbar-track" id="scrollbarTrackTimeline"><div class="scrollbar-thumb"></div></div>
-      </div>
-
-      <div id="statementView-grouped" style="display:none;">
+      <div id="statementView-grouped">
         <div class="scroll-hint">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M15 7l5 5-5 5"/></svg>
           Vuốt/cuộn ngang để xem đầy đủ bảng
@@ -881,11 +908,11 @@
 
         <div class="statement-scroll-area">
           <div class="statement-table-wrap" id="statementWrapGrouped">
-            <table class="statement-table statement-table-grouped" style="width:964px;">
+            <table class="statement-table statement-table-grouped">
               <colgroup>
-                <col style="width:50px;"><col style="width:190px;"><col style="width:120px;">
-                <col style="width:190px;"><col style="width:70px;">
-                <col style="width:100px;"><col style="width:118px;"><col style="width:126px;">
+                <col class="col-stt"><col class="col-content"><col class="col-vendor">
+                <col class="col-note"><col class="col-qty">
+                <col class="col-price"><col class="col-amount"><col class="col-receipt">
               </colgroup>
               <thead>
                 <tr>
@@ -918,6 +945,23 @@
 
   <div id="evContent" style="display:none;">
     <div id="eventTimeline"></div>
+  </div>
+</section>
+
+<!-- ============ MEMORIES ============ -->
+<section id="memories" class="tab-panel container-wide">
+  <div class="divider"><span class="rule"></span><span class="glyph">✦</span><span class="rule"></span></div>
+  <h2 class="section-title">Những khoảnh khắc đáng nhớ</h2>
+  <p class="section-sub">Hình ảnh &amp; video ghi lại hành trình ⎡ Endless LIBRAry ⎦.</p>
+
+  <div class="memories-filter" id="memoriesFilter"></div>
+  <div class="memories-grid" id="memoriesGrid"></div>
+
+  <div class="memories-lightbox" id="memoriesLightbox">
+    <button type="button" class="memories-lightbox-close" id="memoriesLightboxClose" aria-label="Đóng">✕</button>
+    <button type="button" class="memories-lightbox-nav prev" id="memoriesLightboxPrev" aria-label="Ảnh trước">‹</button>
+    <div class="memories-lightbox-stage" id="memoriesLightboxStage"></div>
+    <button type="button" class="memories-lightbox-nav next" id="memoriesLightboxNext" aria-label="Ảnh sau">›</button>
   </div>
 </section>
 
@@ -1031,7 +1075,7 @@
 // Tắt tự khôi phục vị trí cuộn của trình duyệt (nó có thể ghi đè cuộn thủ công của ta).
 if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
 
-const TAB_IDS = ['story', 'progress', 'projectProgress', 'eventSchedule', 'allocation', 'donate', 'thankyou', 'lookup'];
+const TAB_IDS = ['story', 'progress', 'projectProgress', 'eventSchedule', 'memories', 'allocation', 'donate', 'thankyou', 'lookup'];
 const tabBar = document.getElementById('tabBar');
 const floatingLogo = document.querySelector('.site-logo');
 // Vị trí menu bar (tuyệt đối từ đầu trang). PHẢI tính lúc load khi chưa cuộn -
@@ -1621,7 +1665,7 @@ const PP_GID_EXPENSES = '1030339819';
 let PP_RAISED_TOTAL = null;
 // Lãi ngân hàng phát sinh khi giữ quỹ trong tài khoản - cộng thêm vào tổng quỹ để
 // "Còn lại" khớp đúng số dư tài khoản thực tế.
-const PP_BANK_INTEREST = 1337;
+const PP_BANK_INTEREST = 1338;
 const PP_CATEGORY_CAPS = { 'Birthday': 30000000, 'Concert': 80000000, 'Fan Cafe': 10000000 };
 
 // Sheet PROJECT_PROGRESS/EXPENSES đã chia sẻ ở chế độ xem công khai nên đọc thẳng qua
@@ -1650,14 +1694,6 @@ async function fetchGvizRows(gid, sheetId = PP_SHEET_ID){
 function ppDateSortKey(row){
   const m = typeof row.expense_date === 'string' && row.expense_date.match(/Date\((\d+),(\d+),(\d+)\)/);
   return m ? new Date(+m[1], +m[2], +m[3]).getTime() : 0;
-}
-
-function ppDateLabel(row){
-  if(row.expense_date_f){
-    const parts = row.expense_date_f.split('/');
-    if(parts.length >= 2) return `${parts[0]}.${parts[1]}`;
-  }
-  return '-';
 }
 
 let ppRequest = null;
@@ -1689,10 +1725,10 @@ async function ensureProjectProgressLoaded(){
 function renderProjectProgress(progressRows, expenseRows){
   document.getElementById('ppLoading').style.display = 'none';
   document.getElementById('ppContent').style.display = 'block';
+  ppExpenseRowsCache = expenseRows;
   renderWorkstreamBars(progressRows);
   renderBudget(expenseRows);
   renderCategoryBars(expenseRows);
-  renderStatementTable(expenseRows);
   renderStatementGrouped(expenseRows, progressRows);
 }
 
@@ -1777,83 +1813,6 @@ function ppCategoryBadgeClass(cat){
 const PP_LOCKED_LABEL = '<span class="locked">🔒 Chưa công khai</span>';
 
 let ppExpenseRowsCache = [];
-let ppSortState = { key: 'date', dir: 'desc' };
-
-function ppSortValue(row, key){
-  if(key === 'date') return ppDateSortKey(row);
-  if(key === 'category') return String(row.category || '').toLowerCase();
-  if(key === 'description') return String(row.description || '').toLowerCase();
-  return 0;
-}
-
-function ppSortRows(rows){
-  const dir = ppSortState.dir === 'asc' ? 1 : -1;
-  const key = ppSortState.key;
-  return rows.slice().sort((a, b) => {
-    const av = ppSortValue(a, key);
-    const bv = ppSortValue(b, key);
-    if(av < bv) return -1 * dir;
-    if(av > bv) return 1 * dir;
-    return ppDateSortKey(b) - ppDateSortKey(a);
-  });
-}
-
-function ppSetSort(key){
-  if(ppSortState.key === key){
-    ppSortState.dir = ppSortState.dir === 'asc' ? 'desc' : 'asc';
-  } else {
-    ppSortState.key = key;
-    ppSortState.dir = key === 'date' ? 'desc' : 'asc';
-  }
-  renderStatementTable(ppExpenseRowsCache);
-}
-
-function ppUpdateSortIndicators(){
-  document.querySelectorAll('.statement-table th.sortable').forEach(th => {
-    const arrow = th.querySelector('.sort-arrow');
-    if(th.dataset.sortKey === ppSortState.key){
-      th.classList.add('sort-active');
-      arrow.textContent = ppSortState.dir === 'asc' ? '▲' : '▼';
-    } else {
-      th.classList.remove('sort-active');
-      arrow.textContent = '↕';
-    }
-  });
-}
-
-function renderStatementTable(expenseRows){
-  ppExpenseRowsCache = expenseRows;
-  const body = document.getElementById('statementBody');
-  ppUpdateSortIndicators();
-  const rows = ppSortRows(expenseRows);
-  if(rows.length === 0){
-    body.innerHTML = `<tr><td colspan="7" class="statement-empty">Chưa có khoản chi nào được ghi nhận.</td></tr>`;
-    if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
-    return;
-  }
-  body.innerHTML = rows.map(r => {
-    const published = String(r.published || '').trim().toLowerCase() === 'yes';
-    const desc = published ? escapeHtml(r.description || '-') : PP_LOCKED_LABEL;
-    const vendor = published ? escapeHtml(r.vendor || '-') : PP_LOCKED_LABEL;
-    const note = published ? escapeHtml(r.note || '-') : PP_LOCKED_LABEL;
-    let receipts = PP_LOCKED_LABEL;
-    if(published){
-      const links = String(r.receipt_url || '').split(',').map(s => s.trim()).filter(Boolean);
-      receipts = links.length ? `<div class="receipt-thumbs">${links.map(ppReceiptThumb).join('')}</div>` : '-';
-    }
-    return `
-      <tr>
-        <td>${ppDateLabel(r)}</td>
-        <td><span class="category-badge ${ppCategoryBadgeClass(r.category)}">${escapeHtml(r.category || '-')}</span></td>
-        <td class="pin-content">${desc}</td>
-        <td>${vendor}</td>
-        <td>${note}</td>
-        <td>${fmtVND(typeof r.amount === 'number' ? r.amount : 0)}</td>
-        <td>${receipts}</td>
-      </tr>`;
-  }).join('');
-  if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
-}
 
 function ppCellValue(v){
   if(v === null || v === undefined || v === '') return '-';
@@ -2007,19 +1966,6 @@ function renderStatementGrouped(expenseRows, progressRows){
   if(ppSyncGroupedScrollbar) ppSyncGroupedScrollbar();
 }
 
-document.querySelectorAll('.view-toggle-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const view = btn.dataset.view;
-    document.getElementById('statementView-timeline').style.display = view === 'timeline' ? '' : 'none';
-    document.getElementById('statementView-grouped').style.display = view === 'grouped' ? '' : 'none';
-    // Vừa hiện lại mới có clientWidth đúng để tính thanh scroll tự vẽ.
-    if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
-    if(ppSyncGroupedScrollbar) ppSyncGroupedScrollbar();
-  });
-});
-
 // Thanh scroll tự vẽ cho bảng sao kê (cả ngang lẫn dọc) - thay cho scrollbar gốc (đã ẩn
 // qua CSS) vì trên iOS/Android scrollbar gốc tự ẩn khi không chạm vào, không ép hiện
 // cố định được. Đồng bộ theo scrollLeft/scrollTop thực của khung bảng.
@@ -2059,14 +2005,12 @@ function ppSetupScrollIndicator(wrapId, trackHId, trackVId){
   sync();
   return sync;
 }
-const ppSyncTimelineScrollbar = ppSetupScrollIndicator('statementWrapTimeline', 'scrollbarTrackTimeline', 'scrollbarTrackTimelineV');
 const ppSyncGroupedScrollbar = ppSetupScrollIndicator('statementWrapGrouped', 'scrollbarTrackGrouped', 'scrollbarTrackGroupedV');
 
 // Một số trình duyệt (đặc biệt Safari iOS khi cuộn quán tính/momentum) bắn sự kiện
 // 'scroll' rất thưa, khiến chỉ lắng nghe 'scroll' không đủ để thanh bám sát - dùng thêm
 // vòng lặp rAF đồng bộ liên tục theo vị trí cuộn thực, không phụ thuộc tần suất sự kiện.
 (function pollScrollIndicators(){
-  if(ppSyncTimelineScrollbar) ppSyncTimelineScrollbar();
   if(ppSyncGroupedScrollbar) ppSyncGroupedScrollbar();
   requestAnimationFrame(pollScrollIndicators);
 })();
@@ -2328,6 +2272,100 @@ async function ensureEventScheduleLoaded(){
     });
   return evRequest;
 }
+
+/* ================= tab "Memories" (danh sách tĩnh file Drive) ================= */
+const MEMORIES_ALBUMS = ["LED","Fancafe","BOOTH - Chú Thỏ","BOOTH"];
+// Mỗi phần tử: [fileId, albumIndex, kind] - kind: 0 = ảnh, 1 = video.
+const MEMORIES_ITEMS = [["1TWV0J-10v8lJ5FAf5YtnFWf94M3pco0v",1,1],["1BhzviAAtL65KKqAJklSQ0kt1w7tqQLCf",1,1],["1me3Biub8MkMEgz3GVRgqZnB7Ao2VOv_3",1,1],["14YdRZMig_hO49kUozZxJDP5zd1W2U6PW",3,0],["1QBL6ko7zazq65qxwvIS2sI3EgFikmg6M",3,0],["1e1uksblqzrBSojGE4911tJN5rW93jGmK",3,0],["1jeSajObL-fqZzkGI5HUyIeQGNayC-Fmz",2,0],["1lFwEtnsFl0WZueFY210Hw-PJO3RXA4tF",3,0],["1Majd44CuEuYiMowB0VOZnPRofhgT1yaZ",3,0],["1iOqtEj8PrtXpHlfUlPPM5GbspILz5ZbK",2,0],["14cytH7qgQtcWGuyBLY9BKRdQZo1uk_uL",3,0],["1GcUMjzBYSoTMS84adCy4KyqJuiZoti8U",3,0],["1fzCaQq3T3pP_s0neCQvtiKP4_qfqun9U",3,0],["1uywauJ8VYfFlesR4WpPv5lcoOGJ0PnPx",3,0],["1i5FInr0xQ40Z0bLI_Uz-0Wj9fMlTFcAW",3,0],["1GnOtXS9DW-6uzTmo2rVqBd02yWEQLs72",3,0],["13_4W_pX3HRqehAcAYfSZG_qsF3XATbg2",3,0],["1riPsVIJSjiYTt4blgT78YLbPmK2oLqpu",3,0],["1Siwx7_gTEg92ccSBisE6c7atn3d2VgQQ",3,0],["1KCID7-J-rJHbgJ-KlpcLtYfhYHN1uyHQ",3,0],["1SMy3mKQXdW2JiktcXtzkzNZY561HkBJ-",3,0],["1eSceH0ngFQL3WjerqGvg8t-IkFJCYBsy",0,1],["13GrM9A8v1sLm42hGI6NBNI_2hIbzEwth",2,0],["1TP7K2hTG7pkIkJ7kCbCRRMHpD-NnJYY9",3,0],["1EqbUkT8oj8Dbj7O9wKAzU63n25PD5HyA",3,0],["1t1ngXsa_GFmuMv53jhsAzxhu9JCL7UmR",3,0],["1Cm7aG_UqbEHGj-yGlkP6J3GSy9-ZOwec",3,0],["1h113kDovPApM0tS9PwYahh56DWiNeT80",3,0],["1bZsg_o07TNsPkRYqPR4MeiSJvjQCD8zD",3,0],["19jAtJnHGs7EIMpvveJ9g2CV1O8XlfSHo",3,0],["1WITCSjYCYDDXXGWZC9kZy3Ejcbgutmz6",3,0],["12-svCcy2gmRIaW2RthC9GUmBijs2qSIn",1,0],["1MQkDOlgpkLrzoMjldcwaZDCrKRAuLflR",0,0],["18DOV7tyDb29NiEd0j19XexQ_SXvAYcVL",0,0],["1uIaGH-13ImI1uRiIcL1bzzaxQmKH-Enb",0,1],["1C1KkcCP6DeK7s9NeMUFCqc74-K6YaO1f",0,0],["1Eb7qFqysMMMRbgLECatf4u-v2a6Um9YN",0,0],["1_rdbwDTDiBC4VC7_wUm0Mg7JcQS3NmAL",0,0],["1sRqzQxqtT8rTAffoQkMnVsnlJAeCoWlZ",0,0],["1wTZ2D4tI6yiTqI8SeO4vdROKLS204s7m",0,0],["1rl3oq56U51EJ-OmGyRdZQmBYU7MYt58Q",1,1],["1KtHJfjROnQBtnqsIS_ioTrW0z8S9RFTU",0,0],["1Wfaj3A6eDA05y7ImFLpVb7Qy--yvb5kq",0,1],["1ohjrSP23C5cMGe03-0Z6Ck9r_eIAg3TZ",0,0],["1K8XwmsBag2Hx2xCgWCjweuUbIuoGaOw6",1,0],["1yCr9oKJfnK0KVs8FRuO_rWsiXPIGAC8l",0,1],["1e9icKPKaZtnjA-tCGZuITFtgDAk-Scbv",0,1],["1NZ6xn9P-YLH6hPuWFs3A-jRU0Zz4odWc",1,0],["1wUsqmVzXJIW02qoknJLlyaVsxamicf_N",1,0],["1_qjO7vsOQHWYNb3rv4z7V8H6BnM_8VBe",1,0],["1wgs8tJ_fEukmfr1TQylWioruATM8FWdC",1,0],["1Ld3m1-Q2hMsDOrh952KU4UL954ot8GaN",3,0],["1Ii1KLHP5OfCgquoNkGa5h96C8KsaDUly",3,0],["10uEYPxGRXKASG9Q99chhsgwl1q_jHjaF",2,0],["1z1tpCqybCPot3l03jY17NgvcKGiDEkqh",3,0],["1ld_ek0bDofxm-KB5TncNkPNZIsSPyG90",2,0],["1xIbonsECRhSrJajZ4Nx7lVABnbZvKJXN",2,0],["1hogXGGcm1FF7Q78cDtuQ-0767SwSzYJC",2,0],["10K7JsJL2m15uf1Sa0Q_qW7AdmZSHAcuv",3,0],["1GMQ3HZEDggFXEx0WVL5t-wv9MKhkc3hF",3,0],["1zNyP7e8-1BiLq8ODKtwxktOF5dNS_6qD",0,1],["1REvkJZ4Mk7AWcSoUjBMBYR33sSWt20EJ",2,0],["1JgKLYmxG0sAMpY8pMFFwwhu4ElKaDkOj",3,0],["126Dj5qs_uPEoNwV2kuhLnibu_YhYa4P8",2,0],["1Yom6sj4cxzCRcgoFGU_byAi3mFztkj3h",2,0],["1HNft7oXuIh-DRvdWqqPRtoRpwWh6SJL1",1,0],["17Zh8vCuLUlR6I4_iwjte7h6jWhUoVmMd",2,0],["1sMvKGZzVcqW1sne8pFwopQDzvf0P76D-",3,0],["1ex9vNmGG-Q9esAHDuaPlvip8hwhV_mV3",3,0],["1ll0meUlQ0sAjDqrBzcVyx3PEkcFdxdrO",3,0],["1KErjDBW3zqYbAtqO2R5bWLj8IT9tCtM7",2,0],["1RnyvtPEq0gKeNDxDddBtil_hokLVjYdW",1,1],["1fwu5EOwvcIlqulSBxrQUVgX56cdpVUhy",3,0],["1WYIAqEKUe6phXfYkGhMo6ddesS3bGzhd",3,0],["1pL7u_2lwSXtStF-dkn5M7bN4FOqNyXh9",3,0],["12IJJNkFiE-lKvDKVuHZVrVn_sb9ZYs1y",2,0],["1F1DskBSsyckLWvpmi4hjGCvo-koNS42n",3,0],["1xtQysesPPC-gyAALvzedsByvLfdaSTCE",2,0],["1dC7rW1Qw9tdlbiDyL42zwL9WXfgWF3Fh",3,0],["1VeKLFdYMj3gCXv2RpADEODaQxqcgOqcz",2,0],["1AjaFbSH6eL61L8fnQ67sgWMdicQ6bENO",3,0],["127tuRtN6SemgVN4_OOvPnaRLxycpt10F",2,0],["1MS-1_rbgPB86gcEj8AYXN22AlrZvYQSW",2,0],["1cCh44bJao1eN6aT1exkQZqTQxQuT8HH5",2,0],["1ntje-k9fjkETNO8yvv43JSPjwsoWCbAq",1,0],["1GIXw_co8fYoR8ujY9TG8uiAZKpfwpZ5r",3,0],["1BI7TM_jPzb9mTcBZlg8RiKqrompqDBfD",2,0],["1kMGAqt58QStF1vtgvOSIKtmQFuUw20ZK",2,0],["1rEZ8XzpueCbDPNdecFOc43vr5jYFyetT",2,0],["1ydtNbu8o5jo5vsEGXC65t6r_yiGF_7qH",3,0],["1C9jeLeqp9RYZo5EKqlZ4A5IqjLeEOHHT",3,0],["10krRGAMpaeNc9m7wlbqQgWKiDKUR3EqC",2,0],["1twpa2aHc--uZXT_-ESRs6yqO2dRUyWXP",0,1],["1kUQxiIKhObnmDcGiwZikaiMUH7V6oA-9",3,0],["10nAuNgEcvAod_Uk8849SU8cV6aGtZWCH",3,0],["1IYHFX6IF4ioRkg3OqNC2oKO3JtOufXBK",3,0],["1PDotWSEXt9IAj6z9-TQcQUF26YjQhNhn",2,0],["1ErcBjTLs6xt-lUFk5JM_dCHRMDycz2kR",3,0],["1MLVq89-X6Uvd9Frw3j1wOdK_SZwoZwCh",2,0],["1fArDC-ekVxyBEqk0opX9XJWjsoI7nWYP",2,0],["1fMArMTHjl0YDqGMJYYZ6nSmfytrP5lAN",3,0],["1zEolkFfh8lmp--qEbWskgSHEZ5tkKBkh",2,0],["12q9TWMTfRTmCdbzvBqgJckZoGkE2Xavm",2,0],["1-fKHIU2oqFRugcUnKXxjQNB9uBuyLO8o",2,0],["1g58uw262xSlqxIOPxIYBJ44NwKvaU36q",2,0],["1TvUT8Dc_Rt76o4cPYnQ_gMq4YVoADVXR",1,0],["1MpcquseZ6V7jye52qhLesxR0dPpiv5sN",2,0],["1iSLH5oYWCmKtUeFvvT2RdnCkl3YBGJnZ",3,0],["1Eq5H4e6JlXsK2pHvSygb3Z-c_UAHtsks",3,0],["1h0epA2t9cNM9UEvlv9QSOJW4pyLHO9cU",3,0],["1HyrBSVIgw7Rr9XR6N0OqF43IrmLqdICI",3,0],["1y13RQj2sYZ20FtOoU4bkMJjJfI1vKblh",2,0],["1I6gNE1fIH5HJX3lGXYmIJfLbe6JGZAEM",3,0],["1NqK7hRpQ94gtGOciKcx7FXIR4rZC8AUt",3,0],["1nwRA64uiZlI1-9I4CI6QbvwrOqCoKIp8",3,0],["1gPF3Bi9EdUXxccVccnNx88R9K6wZyDL7",3,0],["1Jo8YcHvN6RHBDGyFByhjkXwnpcDd-EAX",2,0],["1bu_til8WAdiPQcEwe3L4KPRysblVJCSH",2,0],["1nsnF3rBUWyCrU2Gge8M2ZCC8iRGfTjym",2,0],["1wjUxz0SIDif_YjIESn70pWl5QbWfDPZs",1,0],["1fK9VcpNc9Lw2i33YX89B6YflhlI5ItLY",2,0],["1o5iB6KrkmlDLIOhdriaXCqm4Fs8F6qws",2,0],["1vIHMVWYVnZDng6lJLixG0iq2t_AW9JKw",3,0],["1u_PueIcbpG6rPYB76s2Impj_kymZ9uMV",3,0],["1_QB-cy6WYSIo4iZlp1Ryn8X9987E8iRl",2,0],["1__PLXSNzpMjXpzb9XJ3SU8phPcfAevKa",3,0],["1JhKwXWyMxicf3yin2XkuW6F40KU7WDy2",0,1],["11wuhzDilwmHyKrFyWTP2SgwEEjL4gSnA",3,0],["1A6tSq7DlTMLYjnafHytyHC-lT4fSbhMe",1,0],["1mkNTMBP1Pyb-ddfbF11UHOGVROaytoDS",3,0],["1qVjMSYYyqwJQH3TCrl98eVBF2XElTXbR",2,0],["1wWU3XYu31EeuOWGLXDFsz5afdmkprUxi",2,0],["1FYeyfOZpPgiguH9oRBKxV-zvrNCQfe3_",3,0],["1Y1Xwvmq3BnkJg6KEiGBuBP8p3mE3Lon2",2,0],["16t-iErOw5bR-iofwy7Z9LlfILhUe8JPK",2,0],["19CNPxvI3OsiV_Dw7_wsNa7WI8oGGo4Ac",3,0],["1SHgJIEgAOlEwV-i715siWCaC6jKYAl8y",2,0],["1OFZnnQIfuybLHbU2e0CjQy5-v8WGHkmX",2,0],["1Ru4Gjc4HVKrwUCLZyT6l_Rec1mmkqtkn",2,0],["1u3bz-HRO2pOBNMgvD54-0Wwuun_TzcUo",2,0],["1GlECoJFF83Ah3ae7LCsTve_3zLNS7cY8",2,0],["1fo_Pe4OZSxLlzbLJlem1K20biEzo_QPC",2,0],["1kN0ToIiAAb3J-KeQh4eEKkQyms-Jq9jY",2,1],["12i80ov2GaXKxbyE1zrNfP50rvdg84iZ8",2,0],["1SK1N80_O5XWwF8XNwYgwSK7_Tsyf1oHL",2,0],["1SJLeRKKRAdyj3vE_Ucpq-uJoW_p8L__x",2,0],["1vDsaukn8HOGXzIaArzgNxPLtuocylIAG",3,1],["11pGRI6BCslJlSryAQ-0tNE1aBLkAnXD8",3,0],["1yhLsma63xZIB5eRTVGHBH0ZbNlE-hnXc",2,0],["17JGbscoYyf4osFduPU3KESqNidFBGN-r",3,0],["1S7oIjDny-X-95ldSYS8TJ-CxAtGd_CXI",2,0],["1AwC9YDy-1CWOrcMIfUso_fmkdjupWqwj",2,0],["12QjfGLg_cjd14L2qIgPJJVk3aBV9sugj",3,0],["1q3HWQKrCQQn9AKQoX3cxcmVDvqRykpSE",2,0],["1qqi9uOo28EPK3mL2zd3oQaleJe5NhP5C",1,0],["1EEL1jdSQAxphlB2avlRTl0bga49TPgKs",2,0],["12rLt4AfRyIUS8hEC0UO9l8XsCIiaQAF5",3,0],["1wstDFSA9wL9hBmQlUe_Ynn4GJ-en7urN",2,0],["1uqIybrahT6K4xcP8nD-HrB6luJH1wC5s",2,0],["1QSWjXPs1dV1u8p9Z7FOPWVauJXV0Nls7",2,0],["1vn-rTxZshyKOwWip6JOyhs_lqv3cYKWP",2,0],["1K4FcdEvRKBuv4axZuj0UT4CNWfRQa6rL",2,0]];
+
+let memoriesFilterIndex = -1;
+let memoriesVisibleItems = [];
+let memoriesLightboxIndex = 0;
+
+function memoriesThumbUrl(id){
+  return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
+}
+
+function renderMemoriesFilter(){
+  const wrap = document.getElementById('memoriesFilter');
+  if(!wrap) return;
+  const buttons = ['<button type="button" class="memories-filter-btn active" data-filter="-1">Tất cả</button>']
+    .concat(MEMORIES_ALBUMS.map((name, i) => `<button type="button" class="memories-filter-btn" data-filter="${i}">${escapeHtml(name)}</button>`));
+  wrap.innerHTML = buttons.join('');
+  wrap.querySelectorAll('.memories-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.memories-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      memoriesFilterIndex = parseInt(btn.dataset.filter, 10);
+      renderMemoriesGrid();
+    });
+  });
+}
+
+function renderMemoriesGrid(){
+  const grid = document.getElementById('memoriesGrid');
+  if(!grid) return;
+  memoriesVisibleItems = memoriesFilterIndex === -1
+    ? MEMORIES_ITEMS
+    : MEMORIES_ITEMS.filter(it => it[1] === memoriesFilterIndex);
+  if(memoriesVisibleItems.length === 0){
+    grid.innerHTML = '<div class="memories-empty">Chưa có ảnh/video nào.</div>';
+    return;
+  }
+  grid.innerHTML = memoriesVisibleItems.map((it, idx) => {
+    const id = it[0], kind = it[2];
+    const playIcon = kind === 1
+      ? '<div class="memories-play"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.92)"><circle cx="12" cy="12" r="11" fill="rgba(11,7,24,.55)"/><path d="M10 8l6 4-6 4V8z"/></svg></div>'
+      : '';
+    return `<div class="memories-item" data-index="${idx}"><img src="${memoriesThumbUrl(id)}" loading="lazy" alt="">${playIcon}</div>`;
+  }).join('');
+  grid.querySelectorAll('.memories-item').forEach(el => {
+    el.addEventListener('click', () => openMemoriesLightbox(parseInt(el.dataset.index, 10)));
+  });
+}
+
+function memoriesStageHtml(item){
+  const id = item[0], kind = item[2];
+  if(kind === 1){
+    return `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay" allowfullscreen></iframe>`;
+  }
+  return `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w1600" alt="">`;
+}
+
+function openMemoriesLightbox(index){
+  memoriesLightboxIndex = index;
+  document.getElementById('memoriesLightboxStage').innerHTML = memoriesStageHtml(memoriesVisibleItems[index]);
+  document.getElementById('memoriesLightbox').classList.add('open');
+}
+
+function closeMemoriesLightbox(){
+  document.getElementById('memoriesLightbox').classList.remove('open');
+  document.getElementById('memoriesLightboxStage').innerHTML = '';
+}
+
+function memoriesLightboxStep(delta){
+  const len = memoriesVisibleItems.length;
+  if(len === 0) return;
+  memoriesLightboxIndex = (memoriesLightboxIndex + delta + len) % len;
+  document.getElementById('memoriesLightboxStage').innerHTML = memoriesStageHtml(memoriesVisibleItems[memoriesLightboxIndex]);
+}
+
+document.getElementById('memoriesLightboxClose').addEventListener('click', closeMemoriesLightbox);
+document.getElementById('memoriesLightboxPrev').addEventListener('click', () => memoriesLightboxStep(-1));
+document.getElementById('memoriesLightboxNext').addEventListener('click', () => memoriesLightboxStep(1));
+document.getElementById('memoriesLightbox').addEventListener('click', (e) => {
+  if(e.target.id === 'memoriesLightbox') closeMemoriesLightbox();
+});
+document.addEventListener('keydown', (e) => {
+  const lb = document.getElementById('memoriesLightbox');
+  if(!lb.classList.contains('open')) return;
+  if(e.key === 'Escape') closeMemoriesLightbox();
+  if(e.key === 'ArrowLeft') memoriesLightboxStep(-1);
+  if(e.key === 'ArrowRight') memoriesLightboxStep(1);
+});
+
+renderMemoriesFilter();
+renderMemoriesGrid();
 
 loadSheet();
 if(document.getElementById('thankyou').classList.contains('active')) ensureWallLoaded();
