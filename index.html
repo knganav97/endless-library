@@ -416,9 +416,10 @@
 
   .statement-table-wrap{
     overflow:auto;max-height:min(620px,70vh);-webkit-overflow-scrolling:touch;
-    scrollbar-width:none;border-radius:10px;flex:1;min-width:0;
+    scrollbar-width:none;border-radius:10px;flex:1;min-width:0;cursor:grab;
   }
   .statement-table-wrap::-webkit-scrollbar{display:none;}
+  .statement-table-wrap.dragging{cursor:grabbing;user-select:none;}
   .scroll-hint{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--paper-dim);font-size:11.5px;letter-spacing:.04em;margin:0 0 14px;}
   .scroll-hint svg{width:13px;height:13px;flex:0 0 auto;animation:scrollHintMove 1.6s ease-in-out infinite;}
   @keyframes scrollHintMove{0%,100%{transform:translateX(0);opacity:.5;}50%{transform:translateX(5px);opacity:1;}}
@@ -539,7 +540,8 @@
   .memories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
   .memories-item{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;border:1px solid var(--card-border);cursor:pointer;background:rgba(255,255,255,0.03);transition:border-color .2s ease,transform .2s ease;}
   .memories-item:hover{border-color:var(--gold);transform:translateY(-2px);}
-  .memories-item img{display:block;width:100%;height:100%;object-fit:cover;}
+  .memories-item img{display:block;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.08);transition:opacity .45s ease, transform .45s ease;}
+  .memories-item img.loaded{opacity:1;transform:scale(1);}
   .memories-item .memories-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(11,7,24,0.22);}
   .memories-item .memories-play svg{width:34px;height:34px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));}
   .memories-empty{text-align:center;color:var(--paper-dim);padding:40px 0;grid-column:1/-1;}
@@ -547,7 +549,8 @@
   .memories-lightbox{display:none;position:fixed;inset:0;z-index:100;background:rgba(5,3,12,0.94);align-items:center;justify-content:center;padding:env(safe-area-inset-top,0px) 56px env(safe-area-inset-bottom,0px);}
   .memories-lightbox.open{display:flex;}
   .memories-lightbox-stage{max-width:min(960px,92vw);max-height:88vh;width:100%;display:flex;align-items:center;justify-content:center;}
-  .memories-lightbox-stage img{display:block;max-width:100%;max-height:88vh;width:auto;height:auto;border-radius:10px;margin:0 auto;}
+  .memories-lightbox-stage img{display:block;max-width:100%;max-height:88vh;width:auto;height:auto;border-radius:10px;margin:0 auto;opacity:0;transform:scale(.96);transition:opacity .35s ease, transform .35s ease;}
+  .memories-lightbox-stage img.loaded{opacity:1;transform:scale(1);}
   .memories-lightbox-stage iframe{width:min(960px,92vw);height:min(540px,70vh);border:none;border-radius:10px;background:#000;}
   .memories-lightbox-close{position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--card-border);color:var(--paper);font-size:18px;cursor:pointer;z-index:2;}
   .memories-lightbox-close:hover{border-color:var(--gold);color:var(--gold-bright);}
@@ -1653,12 +1656,8 @@ document.getElementById('lookupPhone').addEventListener('keydown', e => {
 const PP_SHEET_ID = '1cr0e22AdLJCMmOnWQ3yC7OcXqckGKA0era7hlYx4nrI';
 const PP_GID_PROGRESS = '1986210992';
 
-// ⚠️ TẠM THỜI ĐANG TEST: EXPENSES trỏ sang sheet test riêng (khác hẳn PP_SHEET_ID ở trên).
-// Khi xong test, revert 2 dòng dưới về:
-//   const PP_EXPENSES_SHEET_ID = PP_SHEET_ID;
-//   const PP_GID_EXPENSES = '68979576';
-const PP_EXPENSES_SHEET_ID = '1vsHs8o4pT12PUbCrkwFW6zrhgRsRSDWHnxNQ7aApLqs';
-const PP_GID_EXPENSES = '1030339819';
+const PP_EXPENSES_SHEET_ID = PP_SHEET_ID;
+const PP_GID_EXPENSES = '68979576';
 
 // Tổng quỹ = đúng số "raised" của tab Tiến trình (tổng donate thực nhận, đã trừ
 // refunded) - lấy qua renderProgress() chứ không hardcode riêng ở đây nữa.
@@ -2002,6 +2001,37 @@ function ppSetupScrollIndicator(wrapId, trackHId, trackVId){
   }
   wrap.addEventListener('scroll', sync, {passive:true});
   window.addEventListener('resize', sync);
+
+  // Kéo chuột để cuộn ngang (trình duyệt không hỗ trợ sẵn, chỉ có touch/trackpad mới cuộn được mặc định).
+  let dragging = false, dragMoved = false, dragStartX = 0, dragStartScrollLeft = 0;
+  function onDragMove(e){
+    if(!dragging) return;
+    const dx = e.clientX - dragStartX;
+    if(Math.abs(dx) > 3) dragMoved = true;
+    wrap.scrollLeft = dragStartScrollLeft - dx;
+  }
+  function onDragEnd(){
+    if(!dragging) return;
+    dragging = false;
+    wrap.classList.remove('dragging');
+    window.removeEventListener('pointermove', onDragMove);
+    window.removeEventListener('pointerup', onDragEnd);
+  }
+  wrap.addEventListener('pointerdown', (e) => {
+    if(e.pointerType === 'touch' || e.button !== 0) return;
+    e.preventDefault();
+    dragging = true;
+    dragMoved = false;
+    dragStartX = e.clientX;
+    dragStartScrollLeft = wrap.scrollLeft;
+    wrap.classList.add('dragging');
+    window.addEventListener('pointermove', onDragMove);
+    window.addEventListener('pointerup', onDragEnd);
+  });
+  wrap.addEventListener('click', (e) => {
+    if(dragMoved){ e.preventDefault(); e.stopPropagation(); dragMoved = false; }
+  }, true);
+
   sync();
   return sync;
 }
@@ -2317,7 +2347,7 @@ function renderMemoriesGrid(){
     const playIcon = kind === 1
       ? '<div class="memories-play"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,.92)"><circle cx="12" cy="12" r="11" fill="rgba(11,7,24,.55)"/><path d="M10 8l6 4-6 4V8z"/></svg></div>'
       : '';
-    return `<div class="memories-item" data-index="${idx}"><img src="${memoriesThumbUrl(id)}" loading="lazy" alt="">${playIcon}</div>`;
+    return `<div class="memories-item" data-index="${idx}"><img src="${memoriesThumbUrl(id)}" loading="lazy" alt="" onload="this.classList.add('loaded')">${playIcon}</div>`;
   }).join('');
   grid.querySelectorAll('.memories-item').forEach(el => {
     el.addEventListener('click', () => openMemoriesLightbox(parseInt(el.dataset.index, 10)));
@@ -2329,7 +2359,7 @@ function memoriesStageHtml(item){
   if(kind === 1){
     return `<iframe src="https://drive.google.com/file/d/${id}/preview" allow="autoplay" allowfullscreen></iframe>`;
   }
-  return `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w1600" alt="">`;
+  return `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w1600" alt="" onload="this.classList.add('loaded')">`;
 }
 
 function openMemoriesLightbox(index){
